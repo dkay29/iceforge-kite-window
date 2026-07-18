@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.io/schemas/spot.schema.json",
+  "title": "Spot",
+  "type": "object",
+  "required": ["schemaVersion", "spotId", "name", "location", "shore", "sources", "defaultRulesetId", "active"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "spotId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "region": { "type": "string" },
+    "countryCode": { "type": "string", "minLength": 2, "maxLength": 2 },
+    "location": {
+      "type": "object",
+      "required": ["latitude", "longitude", "timezone"],
+      "properties": {
+        "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+        "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+        "timezone": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "shore": {
+      "type": "object",
+      "required": ["seawardBearingDegrees", "acceptedWindSectors"],
+      "properties": {
+        "seawardBearingDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
+        "acceptedWindSectors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/windSector" },
+          "minItems": 1
+        },
+        "prohibitedWindSectors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/windSector" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": { "type": "object" },
+    "defaultRulesetId": { "type": "string", "minLength": 1 },
+    "active": { "type": "boolean" }
+  },
+  "$defs": {
+    "windSector": {
+      "type": "object",
+      "required": ["startDegrees", "endDegrees", "classification", "accepted"],
+      "properties": {
+        "startDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
+        "endDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
+        "classification": {
+          "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE", "SIDE_OFFSHORE", "OFFSHORE"]
+        },
+        "accepted": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

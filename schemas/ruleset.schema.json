@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.io/schemas/ruleset.schema.json",
+  "title": "Suitability Ruleset",
+  "type": "object",
+  "required": ["schemaVersion", "rulesetId", "version", "session", "wind", "scoring", "thresholds"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "rulesetId": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string" },
+    "session": {
+      "type": "object",
+      "required": ["requiredDurationMinutes", "evaluationIntervalMinutes", "lowTideRequirement", "daylightRequired"],
+      "properties": {
+        "requiredDurationMinutes": { "type": "integer", "minimum": 30 },
+        "evaluationIntervalMinutes": { "type": "integer", "enum": [5, 10, 15, 30, 60] },
+        "lowTideRequirement": { "enum": ["MUST_BE_INSIDE", "MUST_BE_CENTERED", "OPTIONAL"] },
+        "daylightRequired": { "type": "boolean" }
+      }
+    },
+    "wind": {
+      "type": "object",
+      "required": ["minimumUsableMph", "preferredMinimumMph", "preferredMaximumMph", "absoluteMaximumMph", "maximumGustMph", "maximumGustSpreadMph", "acceptedClassifications"],
+      "properties": {
+        "minimumUsableMph": { "type": "number", "minimum": 0 },
+        "preferredMinimumMph": { "type": "number", "minimum": 0 },
+        "preferredMaximumMph": { "type": "number", "minimum": 0 },
+        "absoluteMaximumMph": { "type": "number", "minimum": 0 },
+        "maximumGustMph": { "type": "number", "minimum": 0 },
+        "maximumGustSpreadMph": { "type": "number", "minimum": 0 },
+        "acceptedClassifications": {
+          "type": "array",
+          "items": { "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE"] },
+          "minItems": 1
+        }
+      }
+    },
+    "scoring": { "type": "object" },
+    "thresholds": {
+      "type": "object",
+      "required": ["goMinimumScore", "marginalMinimumScore"],
+      "properties": {
+        "goMinimumScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "marginalMinimumScore": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  }
+}

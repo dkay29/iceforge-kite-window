@@ -1,0 +1,14 @@
+{
+  "name": "iceforge-kite-window",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS-backed kitesurfing suitability decision app",
+  "scripts": {
+    "validate:schemas": "node tools/validate-schemas.mjs",
+    "issues:list": "node tools/list-issues.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

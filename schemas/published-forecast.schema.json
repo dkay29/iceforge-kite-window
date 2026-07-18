@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.io/schemas/published-forecast.schema.json",
+  "title": "Published Spot Forecast",
+  "type": "object",
+  "required": ["schemaVersion", "spot", "localDate", "generatedAt", "expiresAt", "daylight", "tideEvents", "assessment", "revision"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "spot": {
+      "type": "object",
+      "required": ["spotId", "name", "timezone"],
+      "properties": {
+        "spotId": { "type": "string" },
+        "name": { "type": "string" },
+        "region": { "type": "string" },
+        "timezone": { "type": "string" }
+      }
+    },
+    "localDate": { "type": "string", "format": "date" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "daylight": { "type": "object" },
+    "tideEvents": { "type": "array", "items": { "type": "object" } },
+    "assessment": { "type": "object" },
+    "sourceAttribution": { "type": "array", "items": { "type": "object" } },
+    "revision": { "type": "string" }
+  }
+}
