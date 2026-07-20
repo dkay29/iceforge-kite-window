@@ -157,14 +157,14 @@ Candidate windows are scored using:
 
 A proposed initial weighting was:
 
-| Factor         | Weight |
-| -------------- | -----: |
-| Wind speed     |     30 |
-| Wind direction |     25 |
-| Tide alignment |     20 |
-| Gust stability |     15 |
-| Weather        |      5 |
-| Confidence     |      5 |
+| Factor | Weight |
+|---|---:|
+| Wind speed | 30 |
+| Wind direction | 25 |
+| Tide alignment | 20 |
+| Gust stability | 15 |
+| Weather | 5 |
+| Confidence | 5 |
 
 The scoring method should weight the weakest portion of the session heavily so two excellent hours do not conceal one unsafe hour.
 

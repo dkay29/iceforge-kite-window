@@ -3,9 +3,11 @@
 Labels: release,mobile
 
 ## Goal
+
 Distribute the first private beta through TestFlight and Google Play internal testing.
 
 ## Acceptance criteria
+
 - Dev and production environments separated.
 - Privacy disclosure covers location, notifications, and account data.
 - App icons, launch assets, screenshots, and store metadata prepared.
@@ -13,4 +15,5 @@ Distribute the first private beta through TestFlight and Google Play internal te
 - Release checklist completed.
 
 ## Dependencies
+
 #15, #18, #19, #20, #21

@@ -3,7 +3,17 @@
   "$id": "https://iceforge.io/schemas/published-forecast.schema.json",
   "title": "Published Spot Forecast",
   "type": "object",
-  "required": ["schemaVersion", "spot", "localDate", "generatedAt", "expiresAt", "daylight", "tideEvents", "assessment", "revision"],
+  "required": [
+    "schemaVersion",
+    "spot",
+    "localDate",
+    "generatedAt",
+    "expiresAt",
+    "daylight",
+    "tideEvents",
+    "assessment",
+    "revision"
+  ],
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "spot": {

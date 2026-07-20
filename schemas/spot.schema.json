@@ -3,7 +3,16 @@
   "$id": "https://iceforge.io/schemas/spot.schema.json",
   "title": "Spot",
   "type": "object",
-  "required": ["schemaVersion", "spotId", "name", "location", "shore", "sources", "defaultRulesetId", "active"],
+  "required": [
+    "schemaVersion",
+    "spotId",
+    "name",
+    "location",
+    "shore",
+    "sources",
+    "defaultRulesetId",
+    "active"
+  ],
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "spotId": { "type": "string", "pattern": "^[a-z0-9-]+$" },

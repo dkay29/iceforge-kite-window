@@ -3,9 +3,11 @@
 Labels: backend,storage
 
 ## Goal
+
 Publish normalized and assessed forecasts using deterministic S3 keys.
 
 ## Acceptance criteria
+
 - Immutable run documents are created.
 - Current pointers are replaced only after a successful complete run.
 - Revision and ETag behavior is documented.
@@ -13,4 +15,5 @@ Publish normalized and assessed forecasts using deterministic S3 keys.
 - Lifecycle and retention policies are verified.
 
 ## Dependencies
+
 #3, #11

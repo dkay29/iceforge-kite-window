@@ -3,9 +3,11 @@
 Labels: backend,data-source
 
 ## Goal
+
 Retrieve high/low events and curve data for the selected tide station.
 
 ## Acceptance criteria
+
 - Supports prediction and observed water-level products.
 - Uses configured datum, units, and local time behavior.
 - Raw responses are written to S3.
@@ -13,4 +15,5 @@ Retrieve high/low events and curve data for the selected tide station.
 - Tests cover daylight-saving transitions and provider errors.
 
 ## Dependencies
+
 #2, #3, #4

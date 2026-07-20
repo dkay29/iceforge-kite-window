@@ -47,10 +47,10 @@ The repository includes 22 issue drafts in [`github-issues/`](../github-issues/)
 
 ## Suggested milestones
 
-| Milestone | Issues | Outcome |
-|---|---|---|
-| M1 Design locked | 1–4 | Deployable skeleton and validated spot/rules configuration |
-| M2 Decision engine | 5–12 | Published S3 forecast for West Dennis |
-| M3 Service beta | 13–15 | Authenticated API and notifications |
-| M4 Mobile beta | 16–19 | Complete iOS/Android user experience |
-| M5 Private release | 20–22 | Operationally supported private beta |
+| Milestone          | Issues | Outcome                                                    |
+| ------------------ | ------ | ---------------------------------------------------------- |
+| M1 Design locked   | 1–4    | Deployable skeleton and validated spot/rules configuration |
+| M2 Decision engine | 5–12   | Published S3 forecast for West Dennis                      |
+| M3 Service beta    | 13–15  | Authenticated API and notifications                        |
+| M4 Mobile beta     | 16–19  | Complete iOS/Android user experience                       |
+| M5 Private release | 20–22  | Operationally supported private beta                       |

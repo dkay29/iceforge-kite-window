@@ -3,9 +3,11 @@
 Labels: mobile,ux
 
 ## Goal
+
 Build the main GO, MARGINAL, or NO GO experience.
 
 ## Acceptance criteria
+
 - Shows best session window and score.
 - Shows low tide, sunrise, sunset, and daylight duration.
 - Shows wind, gust, tide range, temperature, suggested kite, and confidence.
@@ -13,4 +15,5 @@ Build the main GO, MARGINAL, or NO GO experience.
 - Matches the approved concept across common iPhone and Android sizes.
 
 ## Dependencies
+
 #17
