@@ -49,7 +49,7 @@ RUN set -eux; \
     npm --version
 
 # Install Claude Code globally while still running as root.
-RUN npm install -g @anthropic-ai/claude-code && \
+RUN npm install -g @anthropic-ai/claude-code@2.1.77 && \
     claude --version
 
 # Create or reuse a user and group matching the host UID/GID.
@@ -94,4 +94,4 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ENV PATH="/home/${USERNAME}/.local/bin:/usr/local/bin:${PATH}"
 
-CMD ["/bin/bash"]
+CMD ["claude", "--permission-mode", "bypassPermissions"]

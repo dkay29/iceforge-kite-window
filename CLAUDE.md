@@ -327,3 +327,21 @@ An issue is complete only when:
 - No known regression is left unreported
 - The pull request references the issue
 - Remaining work is captured in explicit follow-up issues
+
+## GitHub access in containers
+
+Claude may run without GitHub network access.
+When working on an issue, read the exported issue file:
+`.claude/issues/issue-<number>.md`
+Treat that file as the authoritative issue content.
+Do not attempt to fetch GitHub issues from inside the container unless access is explicitly available.
+
+## Autonomy
+
+When implementing an approved task:
+
+- Work autonomously through editing, validation, and local Git commits.
+- Do not ask before running local commands.
+- Do not ask before creating a local commit when all checks pass.
+- Never push, create pull requests, or perform remote GitHub mutations unless
+  explicitly requested.

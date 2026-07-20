@@ -1,0 +1,27 @@
+{
+  "body": "## Outcome\n\nCreate the authoritative configuration for the initial launch spot.\n\n## Acceptance criteria\n\n- Canonical spot ID, name, coordinates, timezone, and representative launch point are documented.\n- Open assumptions are explicitly recorded.\n- Configuration validates against the spot schema.\n\n## Dependencies\n\nRepository readiness\n\n---\nRoadmap source: `tools/create-roadmap-project.sh`",
+  "labels": [
+    {
+      "id": "LA_kwDOTcukec8AAAACsUg5dA",
+      "name": "domain",
+      "description": "Domain model and safety rules",
+      "color": "0E8A16"
+    },
+    {
+      "id": "LA_kwDOTcukec8AAAACsUg6Zw",
+      "name": "priority:p0",
+      "description": "Blocking or critical work",
+      "color": "B60205"
+    },
+    {
+      "id": "LA_kwDOTcukec8AAAACsUg6ww",
+      "name": "phase:readiness",
+      "description": "Required before feature implementation",
+      "color": "EDEDED"
+    }
+  ],
+  "number": 2,
+  "state": "OPEN",
+  "title": "Validate canonical West Dennis spot configuration",
+  "url": "https://github.com/dkay29/iceforge-kite-window/issues/2"
+}
