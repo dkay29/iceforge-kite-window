@@ -3,6 +3,10 @@ FROM ubuntu:24.04
 ARG USERNAME=developer
 ARG USER_UID=1000
 ARG USER_GID=1000
+ARG NODE_VERSION=22.20.0
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DISABLE_AUTOUPDATER=1
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -16,27 +20,78 @@ RUN apt-get update && \
         tar \
         gzip \
         unzip \
+        xz-utils \
         python3 \
         python3-pip \
-        sudo && \
+        sudo \
+        passwd && \
     rm -rf /var/lib/apt/lists/*
 
-RUN groupadd --gid "${USER_GID}" "${USERNAME}" && \
-    useradd \
-        --uid "${USER_UID}" \
-        --gid "${USER_GID}" \
-        --create-home \
-        --shell /bin/bash \
-        "${USERNAME}" && \
+# Install Node.js 22 from the official Node.js binary archive.
+RUN set -eux; \
+    ARCH="$(dpkg --print-architecture)"; \
+    case "${ARCH}" in \
+        amd64) NODE_ARCH="x64" ;; \
+        arm64) NODE_ARCH="arm64" ;; \
+        *) \
+            echo "Unsupported architecture: ${ARCH}" >&2; \
+            exit 1; \
+            ;; \
+    esac; \
+    curl -fsSLO \
+        "https://nodejs.org/download/release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"; \
+    tar -xJf \
+        "node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz" \
+        -C /usr/local \
+        --strip-components=1; \
+    rm "node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"; \
+    node --version; \
+    npm --version
+
+# Install Claude Code globally while still running as root.
+RUN npm install -g @anthropic-ai/claude-code && \
+    claude --version
+
+# Create or reuse a user and group matching the host UID/GID.
+RUN set -eux; \
+    EXISTING_GROUP="$(getent group "${USER_GID}" | cut -d: -f1 || true)"; \
+    if [ -z "${EXISTING_GROUP}" ]; then \
+        groupadd --gid "${USER_GID}" "${USERNAME}"; \
+        EXISTING_GROUP="${USERNAME}"; \
+    fi; \
+    if getent passwd "${USER_UID}" >/dev/null; then \
+        EXISTING_USER="$(getent passwd "${USER_UID}" | cut -d: -f1)"; \
+        if [ "${EXISTING_USER}" != "${USERNAME}" ]; then \
+            usermod --login "${USERNAME}" "${EXISTING_USER}"; \
+        fi; \
+        usermod \
+            --home "/home/${USERNAME}" \
+            --move-home \
+            "${USERNAME}"; \
+        usermod \
+            --gid "${EXISTING_GROUP}" \
+            "${USERNAME}"; \
+        usermod \
+            --shell /bin/bash \
+            "${USERNAME}"; \
+    else \
+        useradd \
+            --uid "${USER_UID}" \
+            --gid "${EXISTING_GROUP}" \
+            --create-home \
+            --shell /bin/bash \
+            "${USERNAME}"; \
+    fi; \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" \
-        > "/etc/sudoers.d/${USERNAME}" && \
+        > "/etc/sudoers.d/${USERNAME}"; \
     chmod 0440 "/etc/sudoers.d/${USERNAME}"
 
 USER "${USERNAME}"
 WORKDIR /workspace
 
+# Install uv into the non-root user's home directory.
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
+ENV PATH="/home/${USERNAME}/.local/bin:/usr/local/bin:${PATH}"
 
 CMD ["/bin/bash"]
