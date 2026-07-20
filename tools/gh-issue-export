@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+cd ~/IdeaProjects/iceforge-kite-window
+
+ISSUE_NUMBER="${1:?Usage: export-issue.sh <issue-number>}"
+REPO="${GH_REPO:-dkay29/iceforge-kite-window}"
+OUTPUT_DIR="${ISSUE_OUTPUT_DIR:-.claude/issues}"
+
+mkdir -p "$OUTPUT_DIR"
+
+gh issue view "$ISSUE_NUMBER" \
+  --repo "$REPO" \
+  --json number,title,body,labels,state,url \
+  --template $'# Issue #{{.number}} — {{.title}}\n\nURL: {{.url}}\nState: {{.state}}\n\nLabels: {{range .labels}}{{.name}} {{end}}\n\n## Description\n\n{{.body}}\n' \
+  > "$OUTPUT_DIR/issue-${ISSUE_NUMBER}.md"
+
+printf 'Exported issue #%s to %s/issue-%s.md\n' \
+  "$ISSUE_NUMBER" "$OUTPUT_DIR" "$ISSUE_NUMBER"

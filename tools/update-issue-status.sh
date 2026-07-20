@@ -30,7 +30,7 @@ OWNER="${GH_OWNER:-dkay29}"
 REPO_NAME="${GH_REPO:-iceforge-kite-window}"
 REPO="${OWNER}/${REPO_NAME}"
 PROJECT_NUMBER="${GH_PROJECT_NUMBER:-4}"
-STATUS_FIELD="${GH_PROJECT_FIELD:-Roadmap Status}"
+STATUS_FIELD="${GH_PROJECT_FIELD:-Status}"
 
 die() {
   printf 'ERROR: %s\n' "$*" >&2

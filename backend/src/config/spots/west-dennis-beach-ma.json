@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "version": 2,
+  "spotId": "west-dennis-beach-ma",
+  "name": "West Dennis Beach",
+  "municipality": "Dennis",
+  "village": "West Dennis",
+  "state": "Massachusetts",
+  "countryCode": "US",
+  "location": {
+    "latitude": 41.6494,
+    "longitude": -70.1845,
+    "datum": "NAD83",
+    "timezone": "America/New_York"
+  },
+  "launchPoint": {
+    "latitude": 41.6494,
+    "longitude": -70.1845,
+    "datum": "NAD83",
+    "description": "Massachusetts DPH water-quality monitoring point 'West Dennis (West) — Location 1' (site 21MABCH-MA649766-1); west end of West Dennis Beach. May be supplemented with additional launch points in a later issue."
+  },
+  "validationStatus": "PARTIALLY_VALIDATED",
+  "active": false,
+  "sourceNotes": [
+    "name: docs/initial-design.md line 11 and PROJECT-INSTRUCTIONS.md line 13 both state 'West Dennis Beach / Dennisport, Massachusetts'.",
+    "state: 'Massachusetts' is stated verbatim in docs/initial-design.md line 11 and PROJECT-INSTRUCTIONS.md line 13.",
+    "countryCode: not stated verbatim in repository content; set to 'US' because Massachusetts is a U.S. state and the project's named data sources (National Weather Service, NOAA CO-OPS) are U.S. federal agencies per PROJECT-INSTRUCTIONS.md and docs/initial-design.md section 3.5.",
+    "location.timezone: 'America/New_York' assigned per explicit task instruction, consistent with the Massachusetts state evidence above; not otherwise present in repository content.",
+    "spotId: 'west-dennis-beach-ma' assigned per explicit task instruction.",
+    "municipality / village: 'Dennis' is the Town of Dennis, Massachusetts. 'West Dennis' is a postal village (locality) within the Town of Dennis. Verified by the project owner using live authoritative sources outside this container.",
+    "location.latitude / location.longitude / launchPoint: coordinate 41.6494°N, -70.1845°W (NAD83) is the Massachusetts Department of Public Health water-quality monitoring point named 'West Dennis (West) — Location 1', site identifier 21MABCH-MA649766-1. Sourced by the project owner from live authoritative data outside this container and accepted as the canonical representative coordinate for issue #2."
+  ],
+  "assumptions": [
+    "active is set to false because safety-critical fields (shore bearing, accepted/prohibited wind sectors, NOAA tide station, NWS grid mapping) are not yet validated; the spot must not be surfaced as usable until those follow-up issues resolve their fields and validationStatus is raised to VALIDATED.",
+    "validationStatus is PARTIALLY_VALIDATED rather than VALIDATED because identity, timezone, and geographic coordinate fields are now established, but all safety-critical and provider fields remain unresolved.",
+    "The launchPoint coordinate (41.6494, -70.1845 NAD83) is the DPH monitoring point at the west end of West Dennis Beach. It is used as the initial representative launch coordinate. Additional launch points may be defined in a later issue if the active launch area is better characterized by a different point."
+  ],
+  "unresolved": [
+    {
+      "field": "shore.seawardBearingDegrees",
+      "reason": "Shore bearing requires a site survey / authoritative geographic source not present in this repository.",
+      "followUpIssue": "#5"
+    },
+    {
+      "field": "shore.acceptedWindSectors",
+      "reason": "Accepted wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
+      "followUpIssue": "#5"
+    },
+    {
+      "field": "shore.prohibitedWindSectors",
+      "reason": "Prohibited wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
+      "followUpIssue": "#5"
+    },
+    {
+      "field": "sources.noaaTideStation",
+      "reason": "NOAA CO-OPS tide-station selection has not been performed.",
+      "followUpIssue": "#3"
+    },
+    {
+      "field": "sources.nwsGridpoint",
+      "reason": "NWS grid-point and forecast-endpoint resolution has not been performed.",
+      "followUpIssue": "#4"
+    },
+    {
+      "field": "defaultRulesetId",
+      "reason": "No ruleset has been authored or published for this spot yet.",
+      "followUpIssue": "unassigned — later phase per docs/issues-plan.md Phase 2 (decision engine)"
+    }
+  ]
+}
