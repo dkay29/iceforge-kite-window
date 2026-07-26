@@ -10,6 +10,13 @@ const repoRoot = path.resolve(here, '../../../..');
 const schema = JSON.parse(
   fs.readFileSync(path.join(repoRoot, 'schemas/spot.schema.json'), 'utf8'),
 ) as Record<string, unknown>;
+interface WindSector {
+  startDegrees: number;
+  endDegrees: number;
+  classification: 'DIRECT_ONSHORE' | 'SIDE_ONSHORE' | 'CROSS_SHORE' | 'SIDE_OFFSHORE' | 'OFFSHORE';
+  accepted: boolean;
+}
+
 const spot = JSON.parse(fs.readFileSync(path.join(here, 'west-dennis-beach-ma.json'), 'utf8')) as {
   spotId: string;
   name: string;
@@ -17,6 +24,11 @@ const spot = JSON.parse(fs.readFileSync(path.join(here, 'west-dennis-beach-ma.js
   village?: string;
   location: { latitude?: number; longitude?: number; datum?: string; timezone: string };
   launchPoint?: { latitude?: number; longitude?: number; datum?: string; description?: string };
+  shore?: {
+    seawardBearingDegrees: number;
+    acceptedWindSectors: WindSector[];
+    prohibitedWindSectors: WindSector[];
+  };
   sources?: {
     noaaTideStation?: {
       stationId: string;
@@ -91,17 +103,45 @@ describe('west-dennis-beach-ma spot configuration', () => {
 
   it('records every deferred safety-critical and provider field as unresolved', () => {
     const fields = (spot.unresolved ?? []).map((entry) => entry.field);
-    for (const required of ['shore.seawardBearingDegrees', 'shore.acceptedWindSectors']) {
-      expect(fields).toContain(required);
-    }
     // Resolved by issue #3 — must no longer appear in unresolved
     expect(fields).not.toContain('sources.noaaTideStation');
     // Resolved by issue #4 — must no longer appear in unresolved
     expect(fields).not.toContain('sources.nwsGridpoint');
+    // Resolved by issue #5 — must no longer appear in unresolved
+    expect(fields).not.toContain('shore.seawardBearingDegrees');
+    expect(fields).not.toContain('shore.acceptedWindSectors');
+    expect(fields).not.toContain('shore.prohibitedWindSectors');
     expect(fields).not.toContain('location.latitude');
     expect(fields).not.toContain('location.longitude');
     expect(fields).not.toContain('municipality');
     expect(fields).not.toContain('launchPoint');
+  });
+
+  it('provides a seaward bearing in the valid SSW quadrant for a south-facing beach', () => {
+    const bearing = spot.shore?.seawardBearingDegrees;
+    expect(bearing).toBeDefined();
+    expect(bearing).toBeGreaterThanOrEqual(0);
+    expect(bearing).toBeLessThan(360);
+    // West Dennis Beach faces south into Nantucket Sound: bearing should be in the south quadrant
+    expect(bearing).toBeGreaterThanOrEqual(160);
+    expect(bearing).toBeLessThanOrEqual(230);
+  });
+
+  it('provides accepted sectors covering DIRECT_ONSHORE and SIDE_ONSHORE', () => {
+    const sectors = spot.shore?.acceptedWindSectors ?? [];
+    expect(sectors.length).toBeGreaterThan(0);
+    const classifications = sectors.map((s) => s.classification);
+    expect(classifications).toContain('DIRECT_ONSHORE');
+    expect(classifications).toContain('SIDE_ONSHORE');
+    expect(sectors.every((s) => s.accepted)).toBe(true);
+  });
+
+  it('provides prohibited sectors that cover OFFSHORE directions and are all not accepted', () => {
+    const sectors = spot.shore?.prohibitedWindSectors ?? [];
+    expect(sectors.length).toBeGreaterThan(0);
+    const classifications = sectors.map((s) => s.classification);
+    expect(classifications).toContain('OFFSHORE');
+    expect(sectors.every((s) => !s.accepted)).toBe(true);
   });
 
   it('specifies the validated NOAA CO-OPS tide station', () => {

@@ -1,0 +1,6 @@
+{
+  "_meta": {
+    "purpose": "Edge-case fixture: NOAA response with an empty predictions array. Simulates a station that returns no hi-lo events for the requested date range."
+  },
+  "predictions": []
+}

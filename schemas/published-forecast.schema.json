@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://iceforge.io/schemas/published-forecast.schema.json",
   "title": "Published Spot Forecast",
+  "description": "Immutable presentation-ready daily forecast document published to S3. The mobile client renders this directly without reconstructing decision rules.",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -14,25 +15,196 @@
     "assessment",
     "revision"
   ],
+  "additionalProperties": false,
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "spot": {
       "type": "object",
       "required": ["spotId", "name", "timezone"],
+      "additionalProperties": false,
       "properties": {
-        "spotId": { "type": "string" },
-        "name": { "type": "string" },
+        "spotId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
         "region": { "type": "string" },
-        "timezone": { "type": "string" }
+        "timezone": { "type": "string", "minLength": 1 }
       }
     },
-    "localDate": { "type": "string", "format": "date" },
-    "generatedAt": { "type": "string", "format": "date-time" },
-    "expiresAt": { "type": "string", "format": "date-time" },
-    "daylight": { "type": "object" },
-    "tideEvents": { "type": "array", "items": { "type": "object" } },
-    "assessment": { "type": "object" },
-    "sourceAttribution": { "type": "array", "items": { "type": "object" } },
-    "revision": { "type": "string" }
+    "localDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Calendar date in the spot's timezone (YYYY-MM-DD)."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when this document was generated."
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp after which the document should be refreshed."
+    },
+    "daylight": {
+      "type": "object",
+      "required": ["sunriseUtc", "sunsetUtc", "civilTwilightBeginUtc", "civilTwilightEndUtc"],
+      "additionalProperties": false,
+      "properties": {
+        "sunriseUtc": { "type": "string", "format": "date-time" },
+        "sunsetUtc": { "type": "string", "format": "date-time" },
+        "civilTwilightBeginUtc": { "type": "string", "format": "date-time" },
+        "civilTwilightEndUtc": { "type": "string", "format": "date-time" }
+      }
+    },
+    "tideEvents": {
+      "type": "array",
+      "description": "All tide high/low events for the local date.",
+      "items": {
+        "type": "object",
+        "required": ["timeUtc", "type", "heightFeet", "station", "datum"],
+        "additionalProperties": false,
+        "properties": {
+          "timeUtc": { "type": "string", "format": "date-time" },
+          "type": { "enum": ["HIGH", "LOW"] },
+          "heightFeet": { "type": "number" },
+          "station": { "type": "string", "minLength": 1 },
+          "datum": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "description": "The decision engine output for this day.",
+      "required": ["status", "bestWindow", "alternatives", "timelinePoints"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "$ref": "#/$defs/recommendationStatus" },
+        "bestWindow": {
+          "oneOf": [{ "$ref": "#/$defs/sessionWindow" }, { "type": "null" }]
+        },
+        "alternatives": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sessionWindow" }
+        },
+        "blockingConstraints": {
+          "type": "array",
+          "description": "Hard-rule failures that produced a NO_GO status.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "warnings": {
+          "type": "array",
+          "description": "Non-blocking conditions the user should be aware of.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "timelinePoints": {
+          "type": "array",
+          "description": "15-minute assessment points for the graph.",
+          "items": { "$ref": "#/$defs/timelinePoint" },
+          "minItems": 1
+        }
+      }
+    },
+    "sourceAttribution": {
+      "type": "array",
+      "description": "Attribution records for each data source used.",
+      "items": {
+        "type": "object",
+        "required": ["provider", "retrievedAt"],
+        "additionalProperties": false,
+        "properties": {
+          "provider": { "type": "string", "minLength": 1 },
+          "retrievedAt": { "type": "string", "format": "date-time" },
+          "url": { "type": "string" },
+          "attribution": { "type": "string" }
+        }
+      }
+    },
+    "revision": {
+      "type": "string",
+      "description": "Monotonically increasing run identifier (e.g. ISO 8601 UTC run time).",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "recommendationStatus": {
+      "enum": ["GO", "MARGINAL", "NO_GO", "UNKNOWN"],
+      "description": "GO: hard rules pass, score ≥70. MARGINAL: hard rules pass, score 40–69. NO_GO: hard rule failure or score <40. UNKNOWN: insufficient data."
+    },
+    "sessionWindow": {
+      "type": "object",
+      "required": ["startUtc", "endUtc", "status", "score", "lowTideUtc", "reasons"],
+      "additionalProperties": false,
+      "properties": {
+        "startUtc": { "type": "string", "format": "date-time" },
+        "endUtc": { "type": "string", "format": "date-time" },
+        "status": { "$ref": "#/$defs/recommendationStatus" },
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "weakestSlotScore": { "type": "number", "minimum": 0, "maximum": 100 },
+        "lowTideUtc": { "type": "string", "format": "date-time" },
+        "reasons": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "blockingConstraints": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "scoreComponents": { "$ref": "#/$defs/scoreComponents" }
+      }
+    },
+    "scoreComponents": {
+      "type": "object",
+      "description": "Breakdown of the window score by factor.",
+      "required": [
+        "windSpeed",
+        "windDirection",
+        "tideAlignment",
+        "gustStability",
+        "weather",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "windSpeed": { "type": "number", "minimum": 0, "maximum": 100 },
+        "windDirection": { "type": "number", "minimum": 0, "maximum": 100 },
+        "tideAlignment": { "type": "number", "minimum": 0, "maximum": 100 },
+        "gustStability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "weather": { "type": "number", "minimum": 0, "maximum": 100 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "timelinePoint": {
+      "type": "object",
+      "required": ["timeUtc", "status", "score"],
+      "additionalProperties": false,
+      "properties": {
+        "timeUtc": { "type": "string", "format": "date-time" },
+        "status": { "$ref": "#/$defs/recommendationStatus" },
+        "score": { "type": ["number", "null"] },
+        "windSpeedKnots": { "type": ["number", "null"] },
+        "windDirectionDegrees": { "type": ["number", "null"] },
+        "windClassification": {
+          "type": "string",
+          "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE", "SIDE_OFFSHORE", "OFFSHORE"]
+        },
+        "gustSpeedKnots": { "type": ["number", "null"] },
+        "tideHeightFeet": { "type": ["number", "null"] },
+        "temperatureCelsius": { "type": ["number", "null"] },
+        "probabilityOfPrecipitation": { "type": ["number", "null"] },
+        "isDaylight": { "type": "boolean" },
+        "isInBestWindow": { "type": "boolean" },
+        "interpolatedFields": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dataSource": {
+          "enum": ["OBSERVED", "FORECAST", "INTERPOLATED", "CALCULATED", "MISSING"]
+        },
+        "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+      }
+    }
   }
 }

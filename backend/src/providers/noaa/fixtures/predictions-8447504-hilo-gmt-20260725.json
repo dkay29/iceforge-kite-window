@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "capturedAt": "2026-07-26T00:00:00Z",
+    "source": "NOAA CO-OPS Tide Predictions API",
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20260725&end_date=20260726&station=8447504&product=predictions&datum=MLLW&time_zone=gmt&interval=hilo&units=english&application=iceforge_kite_window&format=json",
+    "station": "8447504",
+    "stationName": "South Yarmouth, Bass River",
+    "product": "predictions",
+    "datum": "MLLW",
+    "timeZone": "GMT",
+    "interval": "hilo",
+    "units": "english",
+    "purpose": "GMT-timezone fixture for adapter integration tests. Times are identical to the LST/LDT fixture shifted by +4 h (EDT offset) to UTC."
+  },
+  "predictions": [
+    { "t": "2026-07-25 08:47", "v": "0.398", "type": "L" },
+    { "t": "2026-07-25 15:03", "v": "2.340", "type": "H" },
+    { "t": "2026-07-25 20:46", "v": "0.634", "type": "L" },
+    { "t": "2026-07-26 03:09", "v": "2.751", "type": "H" },
+    { "t": "2026-07-26 09:39", "v": "0.355", "type": "L" },
+    { "t": "2026-07-26 15:54", "v": "2.373", "type": "H" },
+    { "t": "2026-07-26 21:36", "v": "0.598", "type": "L" },
+    { "t": "2026-07-27 03:57", "v": "2.800", "type": "H" }
+  ]
+}

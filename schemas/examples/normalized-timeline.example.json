@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0",
+  "spotId": "west-dennis-beach-ma",
+  "localDate": "2026-07-26",
+  "generatedAt": "2026-07-26T05:45:00+00:00",
+  "slots": [
+    {
+      "timeUtc": "2026-07-26T07:15:00+00:00",
+      "windSpeedKnots": 13.0,
+      "windDirectionDegrees": 200,
+      "gustSpeedKnots": 18.0,
+      "tideHeightFeet": 0.85,
+      "temperatureCelsius": 23.5,
+      "probabilityOfPrecipitation": 5,
+      "probabilityOfThunder": 0,
+      "skyCoverPercent": 20,
+      "isDaylight": true,
+      "dataSource": "FORECAST",
+      "interpolatedFields": ["tideHeightFeet"],
+      "confidence": 0.9
+    },
+    {
+      "timeUtc": "2026-07-26T07:30:00+00:00",
+      "windSpeedKnots": 14.0,
+      "windDirectionDegrees": 198,
+      "gustSpeedKnots": 19.0,
+      "tideHeightFeet": 0.65,
+      "temperatureCelsius": 23.5,
+      "probabilityOfPrecipitation": 5,
+      "probabilityOfThunder": 0,
+      "skyCoverPercent": 20,
+      "isDaylight": true,
+      "dataSource": "FORECAST",
+      "interpolatedFields": ["tideHeightFeet", "windDirectionDegrees"],
+      "confidence": 0.9
+    }
+  ],
+  "sources": {
+    "nws": {
+      "provider": "NWS BOX",
+      "retrievedAt": "2026-07-26T05:30:00+00:00",
+      "validFrom": "2026-07-26T05:00:00+00:00",
+      "validTo": "2026-08-02T01:00:00+00:00",
+      "isStale": false,
+      "attribution": "National Weather Service, Boston/Norton MA (BOX)"
+    },
+    "noaaTide": {
+      "provider": "NOAA CO-OPS 8447504",
+      "retrievedAt": "2026-07-26T05:35:00+00:00",
+      "validFrom": "2026-07-26T00:00:00+00:00",
+      "validTo": "2026-07-27T00:00:00+00:00",
+      "isStale": false,
+      "attribution": "NOAA Center for Operational Oceanographic Products and Services"
+    },
+    "solar": {
+      "provider": "solar-calc",
+      "retrievedAt": "2026-07-26T05:45:00+00:00",
+      "attribution": "Calculated from spot coordinates and IANA timezone"
+    }
+  }
+}
