@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "version": 4,
+  "version": 5,
   "spotId": "west-dennis-beach-ma",
   "name": "West Dennis Beach",
   "municipality": "Dennis",
@@ -18,6 +18,61 @@
     "longitude": -70.1845,
     "datum": "NAD83",
     "description": "Massachusetts DPH water-quality monitoring point 'West Dennis (West) — Location 1' (site 21MABCH-MA649766-1); west end of West Dennis Beach. May be supplemented with additional launch points in a later issue."
+  },
+  "shore": {
+    "seawardBearingDegrees": 195,
+    "acceptedWindSectors": [
+      {
+        "startDegrees": 165,
+        "endDegrees": 225,
+        "classification": "DIRECT_ONSHORE",
+        "accepted": true
+      },
+      {
+        "startDegrees": 120,
+        "endDegrees": 165,
+        "classification": "SIDE_ONSHORE",
+        "accepted": true
+      },
+      {
+        "startDegrees": 225,
+        "endDegrees": 270,
+        "classification": "SIDE_ONSHORE",
+        "accepted": true
+      }
+    ],
+    "prohibitedWindSectors": [
+      {
+        "startDegrees": 105,
+        "endDegrees": 120,
+        "classification": "CROSS_SHORE",
+        "accepted": false
+      },
+      {
+        "startDegrees": 270,
+        "endDegrees": 285,
+        "classification": "CROSS_SHORE",
+        "accepted": false
+      },
+      {
+        "startDegrees": 60,
+        "endDegrees": 105,
+        "classification": "SIDE_OFFSHORE",
+        "accepted": false
+      },
+      {
+        "startDegrees": 285,
+        "endDegrees": 330,
+        "classification": "SIDE_OFFSHORE",
+        "accepted": false
+      },
+      {
+        "startDegrees": 330,
+        "endDegrees": 60,
+        "classification": "OFFSHORE",
+        "accepted": false
+      }
+    ]
   },
   "sources": {
     "noaaTideStation": {
@@ -66,7 +121,9 @@
     "municipality / village: 'Dennis' is the Town of Dennis, Massachusetts. 'West Dennis' is a postal village (locality) within the Town of Dennis. Verified by the project owner using live authoritative sources outside this container.",
     "location.latitude / location.longitude / launchPoint: coordinate 41.6494°N, -70.1845°W (NAD83) is the Massachusetts Department of Public Health water-quality monitoring point named 'West Dennis (West) — Location 1', site identifier 21MABCH-MA649766-1. Sourced by the project owner from live authoritative data outside this container and accepted as the canonical representative coordinate for issue #2.",
     "sources.noaaTideStation: station 8447504 (South Yarmouth, Bass River) selected as primary tide station for issue #3. Station is a NOAA CO-OPS subordinate station (type S) located at the mouth of Bass River, Nantucket Sound, 1.8 km from West Dennis Beach. Subordinate to Boston (8443970). Time offsets: HW +108 min, LW +106 min; height ratio: 0.29. Hi-lo tide predictions retrieved successfully via NOAA CO-OPS Tide Predictions API on 2026-07-26. 6-minute interval predictions are not available for subordinate stations; hi-lo is the operational interval. Datum is MLLW (Mean Lower Low Water), the standard NOAA CO-OPS datum for US tide predictions. Fallback station 8447525 (Dennisport) verified independently on same date.",
-    "sources.nwsGridpoint: resolved via NWS Points API (https://api.weather.gov/points/41.6494,-70.1845) on 2026-07-26. Office BOX (Boston/Norton MA); grid X=107, Y=74. Point type is 'marine' (NWS classifies this cell as a marine forecast grid, forecast zone ANZ232 — Nantucket Sound). Hourly forecast, 12-hourly forecast, and grid data endpoints all confirmed reachable. Grid data endpoint provides windDirection in degrees and windGust in km/h, which are the preferred inputs for the decision engine. Radar station KBOX confirmed. Relative location returned by API is 'West Dennis, MA' at distance 0."
+    "sources.nwsGridpoint: resolved via NWS Points API (https://api.weather.gov/points/41.6494,-70.1845) on 2026-07-26. Office BOX (Boston/Norton MA); grid X=107, Y=74. Point type is 'marine' (NWS classifies this cell as a marine forecast grid, forecast zone ANZ232 — Nantucket Sound). Hourly forecast, 12-hourly forecast, and grid data endpoints all confirmed reachable. Grid data endpoint provides windDirection in degrees and windGust in km/h, which are the preferred inputs for the decision engine. Radar station KBOX confirmed. Relative location returned by API is 'West Dennis, MA' at distance 0.",
+    "shore.seawardBearingDegrees: 195° assigned per issue #5 based on the south-southwest orientation of West Dennis Beach facing Nantucket Sound. The shoreline at this location (41.6494°N, −70.1845°W) runs WNW–ESE; the perpendicular toward open water is approximately SSW (190°–200°). Value 195° is a geographic estimate derived from published coordinates and publicly known Cape Cod shoreline orientation. Requires project owner verification against an authoritative geographic source (e.g. NOAA nautical chart 13229, which was also identified as the relevant chart in the NOAA station metadata for station 8447504) before the spot is activated.",
+    "shore.acceptedWindSectors / prohibitedWindSectors: sectors computed from seawardBearingDegrees 195° using fixed angular thresholds: DIRECT_ONSHORE within ±30°, SIDE_ONSHORE within ±75°, CROSS_SHORE within ±90°, SIDE_OFFSHORE within ±135°, OFFSHORE beyond ±135°. DIRECT_ONSHORE and SIDE_ONSHORE are accepted; all others are prohibited. The OFFSHORE sector (330°–60°) wraps through 0°/360°. Sector boundaries assume the bearing is correct; if the bearing is adjusted, sector boundaries must be recalculated. See docs/shore-bearing.md for domain review examples and verification guidance."
   ],
   "assumptions": [
     "active is set to false because safety-critical fields (shore bearing, accepted/prohibited wind sectors, NOAA tide station, NWS grid mapping) are not yet validated; the spot must not be surfaced as usable until those follow-up issues resolve their fields and validationStatus is raised to VALIDATED.",
@@ -74,21 +131,6 @@
     "The launchPoint coordinate (41.6494, -70.1845 NAD83) is the DPH monitoring point at the west end of West Dennis Beach. It is used as the initial representative launch coordinate. Additional launch points may be defined in a later issue if the active launch area is better characterized by a different point."
   ],
   "unresolved": [
-    {
-      "field": "shore.seawardBearingDegrees",
-      "reason": "Shore bearing requires a site survey / authoritative geographic source not present in this repository.",
-      "followUpIssue": "#5"
-    },
-    {
-      "field": "shore.acceptedWindSectors",
-      "reason": "Accepted wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
-      "followUpIssue": "#5"
-    },
-    {
-      "field": "shore.prohibitedWindSectors",
-      "reason": "Prohibited wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
-      "followUpIssue": "#5"
-    },
     {
       "field": "defaultRulesetId",
       "reason": "No ruleset has been authored or published for this spot yet.",

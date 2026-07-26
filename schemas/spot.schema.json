@@ -64,16 +64,23 @@
     },
     "shore": {
       "type": "object",
-      "description": "Site-survey data owned by the shore-bearing/wind-sector follow-up issue. Absent until validated.",
+      "description": "Site-survey data defining beach orientation and safe wind sectors. All three fields must be present for a spot to be VALIDATED.",
       "properties": {
-        "seawardBearingDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
+        "seawardBearingDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+          "description": "Compass bearing (degrees true, clockwise from north) pointing from the beach toward open water. Used as the reference direction for wind classification. An onshore wind is one whose meteorological FROM-direction matches this bearing."
+        },
         "acceptedWindSectors": {
           "type": "array",
+          "description": "Wind sectors in which the spot is considered safe and kite-able. Must cover all accepted classifications (DIRECT_ONSHORE and SIDE_ONSHORE).",
           "items": { "$ref": "#/$defs/windSector" },
           "minItems": 1
         },
         "prohibitedWindSectors": {
           "type": "array",
+          "description": "Wind sectors that are prohibited or not accepted. When a wind sector's startDegrees > endDegrees the sector wraps through 0°/360° (e.g. startDegrees:330, endDegrees:60 covers 330°–360° and 0°–60°).",
           "items": { "$ref": "#/$defs/windSector" }
         }
       },
@@ -264,14 +271,29 @@
     },
     "windSector": {
       "type": "object",
+      "description": "A contiguous arc of wind directions sharing the same safety classification. Arcs are expressed in meteorological FROM-degrees (0° = north, 90° = east). When startDegrees > endDegrees, the arc wraps through 0°/360° (e.g. startDegrees:330, endDegrees:60 covers the north-through-northeast arc).",
       "required": ["startDegrees", "endDegrees", "classification", "accepted"],
       "properties": {
-        "startDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
-        "endDegrees": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
-        "classification": {
-          "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE", "SIDE_OFFSHORE", "OFFSHORE"]
+        "startDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+          "description": "Inclusive start of the arc in degrees true. When startDegrees > endDegrees, the arc wraps through 0°/360°."
         },
-        "accepted": { "type": "boolean" }
+        "endDegrees": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+          "description": "Exclusive end of the arc in degrees true."
+        },
+        "classification": {
+          "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE", "SIDE_OFFSHORE", "OFFSHORE"],
+          "description": "Wind classification relative to the spot's seawardBearingDegrees. DIRECT_ONSHORE: |diff| ≤ 30°. SIDE_ONSHORE: 30° < |diff| ≤ 75°. CROSS_SHORE: 75° < |diff| ≤ 90°. SIDE_OFFSHORE: 90° < |diff| ≤ 135°. OFFSHORE: |diff| > 135°."
+        },
+        "accepted": {
+          "type": "boolean",
+          "description": "True when this sector is safe and kite-able at this spot."
+        }
       },
       "additionalProperties": false
     }
