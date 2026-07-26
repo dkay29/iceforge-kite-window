@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "version": 2,
+  "version": 3,
   "spotId": "west-dennis-beach-ma",
   "name": "West Dennis Beach",
   "municipality": "Dennis",
@@ -19,6 +19,30 @@
     "datum": "NAD83",
     "description": "Massachusetts DPH water-quality monitoring point 'West Dennis (West) — Location 1' (site 21MABCH-MA649766-1); west end of West Dennis Beach. May be supplemented with additional launch points in a later issue."
   },
+  "sources": {
+    "noaaTideStation": {
+      "stationId": "8447504",
+      "name": "South Yarmouth, Bass River",
+      "stationType": "S",
+      "referenceStationId": "8443970",
+      "datum": "MLLW",
+      "lat": 41.665,
+      "lng": -70.1833,
+      "distanceKm": 1.8,
+      "availableProducts": ["predictions"],
+      "predictionIntervals": ["hilo"],
+      "fallback": {
+        "stations": [
+          {
+            "stationId": "8447525",
+            "name": "Dennisport",
+            "reason": "Alternative subordinate station on Nantucket Sound, 7 km east of West Dennis Beach; same reference station (Boston 8443970). Verified to return hi-lo predictions via NOAA CO-OPS API on 2026-07-26."
+          }
+        ],
+        "onAllFailed": "NO_GO"
+      }
+    }
+  },
   "validationStatus": "PARTIALLY_VALIDATED",
   "active": false,
   "sourceNotes": [
@@ -28,7 +52,8 @@
     "location.timezone: 'America/New_York' assigned per explicit task instruction, consistent with the Massachusetts state evidence above; not otherwise present in repository content.",
     "spotId: 'west-dennis-beach-ma' assigned per explicit task instruction.",
     "municipality / village: 'Dennis' is the Town of Dennis, Massachusetts. 'West Dennis' is a postal village (locality) within the Town of Dennis. Verified by the project owner using live authoritative sources outside this container.",
-    "location.latitude / location.longitude / launchPoint: coordinate 41.6494°N, -70.1845°W (NAD83) is the Massachusetts Department of Public Health water-quality monitoring point named 'West Dennis (West) — Location 1', site identifier 21MABCH-MA649766-1. Sourced by the project owner from live authoritative data outside this container and accepted as the canonical representative coordinate for issue #2."
+    "location.latitude / location.longitude / launchPoint: coordinate 41.6494°N, -70.1845°W (NAD83) is the Massachusetts Department of Public Health water-quality monitoring point named 'West Dennis (West) — Location 1', site identifier 21MABCH-MA649766-1. Sourced by the project owner from live authoritative data outside this container and accepted as the canonical representative coordinate for issue #2.",
+    "sources.noaaTideStation: station 8447504 (South Yarmouth, Bass River) selected as primary tide station for issue #3. Station is a NOAA CO-OPS subordinate station (type S) located at the mouth of Bass River, Nantucket Sound, 1.8 km from West Dennis Beach. Subordinate to Boston (8443970). Time offsets: HW +108 min, LW +106 min; height ratio: 0.29. Hi-lo tide predictions retrieved successfully via NOAA CO-OPS Tide Predictions API on 2026-07-26. 6-minute interval predictions are not available for subordinate stations; hi-lo is the operational interval. Datum is MLLW (Mean Lower Low Water), the standard NOAA CO-OPS datum for US tide predictions. Fallback station 8447525 (Dennisport) verified independently on same date."
   ],
   "assumptions": [
     "active is set to false because safety-critical fields (shore bearing, accepted/prohibited wind sectors, NOAA tide station, NWS grid mapping) are not yet validated; the spot must not be surfaced as usable until those follow-up issues resolve their fields and validationStatus is raised to VALIDATED.",
@@ -50,11 +75,6 @@
       "field": "shore.prohibitedWindSectors",
       "reason": "Prohibited wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
       "followUpIssue": "#5"
-    },
-    {
-      "field": "sources.noaaTideStation",
-      "reason": "NOAA CO-OPS tide-station selection has not been performed.",
-      "followUpIssue": "#3"
     },
     {
       "field": "sources.nwsGridpoint",

@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "capturedAt": "2026-07-26T00:00:00Z",
+    "source": "NOAA CO-OPS Tide Predictions API",
+    "url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date=20260725&end_date=20260726&station=8447504&product=predictions&datum=MLLW&time_zone=lst_ldt&interval=hilo&units=english&application=iceforge_kite_window&format=json",
+    "station": "8447504",
+    "stationName": "South Yarmouth, Bass River",
+    "product": "predictions",
+    "datum": "MLLW",
+    "timeZone": "LST/LDT",
+    "interval": "hilo",
+    "units": "english",
+    "purpose": "Captured fixture for integration tests — validates that station 8447504 returns well-formed hi-lo predictions for West Dennis Beach."
+  },
+  "predictions": [
+    { "t": "2026-07-25 04:47", "v": "0.398", "type": "L" },
+    { "t": "2026-07-25 11:03", "v": "2.340", "type": "H" },
+    { "t": "2026-07-25 16:46", "v": "0.634", "type": "L" },
+    { "t": "2026-07-25 23:09", "v": "2.751", "type": "H" },
+    { "t": "2026-07-26 05:39", "v": "0.355", "type": "L" },
+    { "t": "2026-07-26 11:54", "v": "2.373", "type": "H" },
+    { "t": "2026-07-26 17:36", "v": "0.598", "type": "L" },
+    { "t": "2026-07-26 23:57", "v": "2.800", "type": "H" }
+  ]
+}

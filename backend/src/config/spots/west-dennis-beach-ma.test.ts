@@ -17,6 +17,24 @@ const spot = JSON.parse(fs.readFileSync(path.join(here, 'west-dennis-beach-ma.js
   village?: string;
   location: { latitude?: number; longitude?: number; datum?: string; timezone: string };
   launchPoint?: { latitude?: number; longitude?: number; datum?: string; description?: string };
+  sources?: {
+    noaaTideStation?: {
+      stationId: string;
+      name: string;
+      stationType: 'H' | 'S';
+      referenceStationId?: string;
+      datum: string;
+      lat: number;
+      lng: number;
+      distanceKm: number;
+      availableProducts: string[];
+      predictionIntervals?: string[];
+      fallback: {
+        stations: Array<{ stationId: string; name: string; reason: string }>;
+        onAllFailed: 'NO_GO';
+      };
+    };
+  };
   validationStatus: string;
   active: boolean;
   unresolved?: Array<{ field: string; reason: string; followUpIssue?: string }>;
@@ -64,15 +82,37 @@ describe('west-dennis-beach-ma spot configuration', () => {
     for (const required of [
       'shore.seawardBearingDegrees',
       'shore.acceptedWindSectors',
-      'sources.noaaTideStation',
       'sources.nwsGridpoint',
     ]) {
       expect(fields).toContain(required);
     }
+    // Resolved by issue #3 — must no longer appear in unresolved
+    expect(fields).not.toContain('sources.noaaTideStation');
     expect(fields).not.toContain('location.latitude');
     expect(fields).not.toContain('location.longitude');
     expect(fields).not.toContain('municipality');
     expect(fields).not.toContain('launchPoint');
+  });
+
+  it('specifies the validated NOAA CO-OPS tide station', () => {
+    const station = spot.sources?.noaaTideStation;
+    expect(station).toBeDefined();
+    expect(station?.stationId).toBe('8447504');
+    expect(station?.name).toBe('South Yarmouth, Bass River');
+    expect(station?.stationType).toBe('S');
+    expect(station?.referenceStationId).toBe('8443970');
+    expect(station?.datum).toBe('MLLW');
+    expect(station?.distanceKm).toBeLessThanOrEqual(5);
+    expect(station?.availableProducts).toContain('predictions');
+    expect(station?.predictionIntervals).toContain('hilo');
+  });
+
+  it('specifies a fallback tide station and an explicit on-failure policy', () => {
+    const fallback = spot.sources?.noaaTideStation?.fallback;
+    expect(fallback).toBeDefined();
+    expect(fallback?.stations.length).toBeGreaterThan(0);
+    expect(fallback?.stations[0]?.stationId).toBe('8447525');
+    expect(fallback?.onAllFailed).toBe('NO_GO');
   });
 
   it('keeps latitude and longitude within valid ranges', () => {

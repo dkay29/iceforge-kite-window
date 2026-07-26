@@ -81,7 +81,23 @@
     },
     "sources": {
       "type": "object",
-      "description": "Provider mappings (e.g. NOAA CO-OPS station, NWS grid endpoint) owned by provider-adapter follow-up issues. Absent until validated."
+      "description": "Provider mappings for weather and tide data. Each sub-field is owned by a provider-adapter issue and absent until that issue resolves it.",
+      "properties": {
+        "noaaTideStation": { "$ref": "#/$defs/noaaTideStation" },
+        "nwsGridpoint": {
+          "type": "object",
+          "description": "NWS grid endpoint and office, owned by issue #4.",
+          "properties": {
+            "office": { "type": "string", "minLength": 1 },
+            "gridX": { "type": "integer" },
+            "gridY": { "type": "integer" },
+            "forecastEndpoint": { "type": "string", "minLength": 1 },
+            "forecastHourlyEndpoint": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     },
     "defaultRulesetId": { "type": "string", "minLength": 1 },
     "validationStatus": {
@@ -114,6 +130,89 @@
     }
   },
   "$defs": {
+    "noaaTideStation": {
+      "type": "object",
+      "description": "NOAA CO-OPS tide station used for tide predictions at this spot.",
+      "required": [
+        "stationId",
+        "name",
+        "stationType",
+        "datum",
+        "lat",
+        "lng",
+        "distanceKm",
+        "availableProducts",
+        "fallback"
+      ],
+      "properties": {
+        "stationId": {
+          "type": "string",
+          "description": "NOAA CO-OPS station identifier (e.g. '8447504').",
+          "pattern": "^[0-9]+$"
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "stationType": {
+          "enum": ["H", "S"],
+          "description": "'H' = harmonic (reference) station with its own tidal constituents; 'S' = subordinate station using offset-adjusted predictions from a reference station."
+        },
+        "referenceStationId": {
+          "type": "string",
+          "description": "NOAA CO-OPS ID of the harmonic reference station. Required when stationType is 'S'.",
+          "pattern": "^[0-9]+$"
+        },
+        "datum": {
+          "type": "string",
+          "description": "Tidal datum for height values returned by the predictions API (e.g. 'MLLW').",
+          "minLength": 1
+        },
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lng": { "type": "number", "minimum": -180, "maximum": 180 },
+        "distanceKm": {
+          "type": "number",
+          "description": "Great-circle distance in kilometres from the spot's general location.",
+          "exclusiveMinimum": 0
+        },
+        "availableProducts": {
+          "type": "array",
+          "description": "NOAA CO-OPS product identifiers confirmed available for this station (e.g. 'predictions').",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "predictionIntervals": {
+          "type": "array",
+          "description": "Confirmed prediction interval values (e.g. 'hilo', '6', 'h').",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "fallback": { "$ref": "#/$defs/noaaTideStationFallback" }
+      },
+      "additionalProperties": false
+    },
+    "noaaTideStationFallback": {
+      "type": "object",
+      "description": "Policy for handling NOAA CO-OPS station retrieval failures.",
+      "required": ["stations", "onAllFailed"],
+      "properties": {
+        "stations": {
+          "type": "array",
+          "description": "Ordered list of alternative stations to try, in preference order.",
+          "items": {
+            "type": "object",
+            "required": ["stationId", "name", "reason"],
+            "properties": {
+              "stationId": { "type": "string", "pattern": "^[0-9]+$" },
+              "name": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "onAllFailed": {
+          "enum": ["NO_GO"],
+          "description": "Action taken when all stations fail. 'NO_GO' — do not publish a forecast; surface an explicit error to the user."
+        }
+      },
+      "additionalProperties": false
+    },
     "windSector": {
       "type": "object",
       "required": ["startDegrees", "endDegrees", "classification", "accepted"],
