@@ -11,6 +11,9 @@ export default tseslint.config(
       '**/cdk.out/**',
       'coverage/**',
       'kite-window-chatgpt-project/**',
+      // React Native CJS config files use CommonJS globals (require, module, __dirname)
+      'mobile/babel.config.js',
+      'mobile/metro.config.js',
     ],
   },
   js.configs.recommended,
@@ -23,6 +26,13 @@ export default tseslint.config(
         console: 'readonly',
         process: 'readonly',
       },
+    },
+  },
+  {
+    // React Native screen components use _-prefixed params for unused nav props
+    files: ['mobile/src/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 );
