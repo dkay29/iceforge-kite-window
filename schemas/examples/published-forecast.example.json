@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "1.0",
+  "spot": {
+    "spotId": "west-dennis-beach-ma",
+    "name": "West Dennis Beach",
+    "region": "Cape Cod",
+    "timezone": "America/New_York"
+  },
+  "localDate": "2026-07-26",
+  "generatedAt": "2026-07-26T06:00:00+00:00",
+  "expiresAt": "2026-07-26T08:00:00+00:00",
+  "daylight": {
+    "sunriseUtc": "2026-07-26T09:28:00+00:00",
+    "sunsetUtc": "2026-07-27T00:06:00+00:00",
+    "civilTwilightBeginUtc": "2026-07-26T08:57:00+00:00",
+    "civilTwilightEndUtc": "2026-07-27T00:37:00+00:00"
+  },
+  "tideEvents": [
+    {
+      "timeUtc": "2026-07-26T08:47:00+00:00",
+      "type": "LOW",
+      "heightFeet": 0.398,
+      "station": "8447504",
+      "datum": "MLLW"
+    },
+    {
+      "timeUtc": "2026-07-26T15:03:00+00:00",
+      "type": "HIGH",
+      "heightFeet": 2.34,
+      "station": "8447504",
+      "datum": "MLLW"
+    }
+  ],
+  "assessment": {
+    "status": "GO",
+    "bestWindow": {
+      "startUtc": "2026-07-26T07:17:00+00:00",
+      "endUtc": "2026-07-26T10:17:00+00:00",
+      "status": "GO",
+      "score": 82,
+      "weakestSlotScore": 68,
+      "lowTideUtc": "2026-07-26T08:47:00+00:00",
+      "reasons": ["SSW wind 12–15 kt throughout", "Low tide centered in window"],
+      "warnings": ["Gusts to 20 kt around low tide"],
+      "blockingConstraints": [],
+      "scoreComponents": {
+        "windSpeed": 80,
+        "windDirection": 95,
+        "tideAlignment": 100,
+        "gustStability": 70,
+        "weather": 90,
+        "confidence": 85
+      }
+    },
+    "alternatives": [],
+    "blockingConstraints": [],
+    "warnings": ["Gusts to 20 kt around low tide"],
+    "timelinePoints": [
+      {
+        "timeUtc": "2026-07-26T07:15:00+00:00",
+        "status": "GO",
+        "score": 82,
+        "windSpeedKnots": 13,
+        "windDirectionDegrees": 200,
+        "windClassification": "DIRECT_ONSHORE",
+        "gustSpeedKnots": 18,
+        "tideHeightFeet": 0.85,
+        "temperatureCelsius": 23.5,
+        "probabilityOfPrecipitation": 5,
+        "isDaylight": true,
+        "isInBestWindow": true,
+        "interpolatedFields": ["tideHeightFeet"],
+        "dataSource": "FORECAST",
+        "confidence": 0.9
+      }
+    ]
+  },
+  "sourceAttribution": [
+    {
+      "provider": "NWS BOX",
+      "retrievedAt": "2026-07-26T05:30:00+00:00",
+      "url": "https://api.weather.gov/gridpoints/BOX/107,74/forecast/hourly",
+      "attribution": "National Weather Service, Boston/Norton MA (BOX)"
+    },
+    {
+      "provider": "NOAA CO-OPS 8447504",
+      "retrievedAt": "2026-07-26T05:35:00+00:00",
+      "attribution": "NOAA Center for Operational Oceanographic Products and Services"
+    }
+  ],
+  "revision": "2026-07-26T06:00:00Z"
+}

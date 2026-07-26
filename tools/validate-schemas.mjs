@@ -14,9 +14,12 @@ for (const file of files) {
   console.log(`valid schema: ${file}`);
 }
 
-// Config documents that must validate against a given schema.
+// Config documents and example documents that must validate against a given schema.
 const documentsBySchema = {
   'spot.schema.json': ['backend/src/config/spots/west-dennis-beach-ma.json'],
+  'published-forecast.schema.json': ['schemas/examples/published-forecast.example.json'],
+  'ruleset.schema.json': ['schemas/examples/ruleset.example.json'],
+  'normalized-timeline.schema.json': ['schemas/examples/normalized-timeline.example.json'],
 };
 
 let hasDocumentErrors = false;

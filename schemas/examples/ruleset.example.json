@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0",
+  "rulesetId": "west-dennis-beach-ma-default",
+  "version": 1,
+  "name": "West Dennis Beach — Default Ruleset",
+  "session": {
+    "requiredDurationMinutes": 180,
+    "evaluationIntervalMinutes": 15,
+    "lowTideRequirement": "MUST_BE_INSIDE",
+    "daylightRequired": true
+  },
+  "wind": {
+    "minimumUsableMph": 8,
+    "preferredMinimumMph": 12,
+    "preferredMaximumMph": 25,
+    "absoluteMaximumMph": 35,
+    "maximumGustMph": 40,
+    "maximumGustSpreadMph": 15,
+    "acceptedClassifications": ["DIRECT_ONSHORE", "SIDE_ONSHORE"]
+  },
+  "scoring": {
+    "weights": {
+      "windSpeed": 30,
+      "windDirection": 25,
+      "tideAlignment": 20,
+      "gustStability": 15,
+      "weather": 5,
+      "confidence": 5
+    }
+  },
+  "thresholds": {
+    "goMinimumScore": 70,
+    "marginalMinimumScore": 40
+  }
+}

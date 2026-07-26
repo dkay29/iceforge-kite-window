@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.io/schemas/normalized-timeline.schema.json",
+  "title": "Normalized 15-Minute Timeline",
+  "description": "Canonicalized 15-minute timeline combining NWS wind/weather, NOAA tide, and solar data. Persisted to S3 as an immutable raw-pipeline artifact prior to assessment.",
+  "type": "object",
+  "required": ["schemaVersion", "spotId", "localDate", "generatedAt", "slots", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "spotId": { "type": "string", "minLength": 1 },
+    "localDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Calendar date in the spot's timezone (YYYY-MM-DD)."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when this timeline was generated."
+    },
+    "slots": {
+      "type": "array",
+      "description": "15-minute timeline slots, sorted ascending by timeUtc. Each slot represents the period [timeUtc, timeUtc+15min).",
+      "items": { "$ref": "#/$defs/timelineSlot" },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "object",
+      "description": "Source metadata for each provider contributing to this timeline.",
+      "required": ["nws", "noaaTide", "solar"],
+      "additionalProperties": false,
+      "properties": {
+        "nws": { "$ref": "#/$defs/sourceRecord" },
+        "noaaTide": { "$ref": "#/$defs/sourceRecord" },
+        "solar": { "$ref": "#/$defs/sourceRecord" }
+      }
+    }
+  },
+  "$defs": {
+    "timelineSlot": {
+      "type": "object",
+      "required": ["timeUtc"],
+      "additionalProperties": false,
+      "properties": {
+        "timeUtc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC-aligned slot start (inclusive). Slots are 15 minutes wide."
+        },
+        "windSpeedKnots": { "type": ["number", "null"] },
+        "windDirectionDegrees": { "type": ["number", "null"] },
+        "gustSpeedKnots": { "type": ["number", "null"] },
+        "tideHeightFeet": { "type": ["number", "null"] },
+        "temperatureCelsius": { "type": ["number", "null"] },
+        "probabilityOfPrecipitation": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "probabilityOfThunder": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "skyCoverPercent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "isDaylight": { "type": ["boolean", "null"] },
+        "dataSource": {
+          "enum": ["OBSERVED", "FORECAST", "INTERPOLATED", "CALCULATED", "MISSING"]
+        },
+        "interpolatedFields": {
+          "type": "array",
+          "description": "Names of fields whose values were interpolated for this slot.",
+          "items": { "type": "string" }
+        },
+        "confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Composite data confidence for this slot (1.0 = full confidence)."
+        }
+      }
+    },
+    "sourceRecord": {
+      "type": "object",
+      "required": ["provider", "retrievedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "retrievedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp when this source was fetched."
+        },
+        "validFrom": { "type": "string", "format": "date-time" },
+        "validTo": { "type": "string", "format": "date-time" },
+        "isStale": { "type": "boolean" },
+        "attribution": { "type": "string" }
+      }
+    }
+  }
+}
