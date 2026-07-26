@@ -86,13 +86,62 @@
         "noaaTideStation": { "$ref": "#/$defs/noaaTideStation" },
         "nwsGridpoint": {
           "type": "object",
-          "description": "NWS grid endpoint and office, owned by issue #4.",
+          "description": "NWS grid-point metadata resolved from the Points API for this spot's coordinates. Owned by issue #4.",
+          "required": [
+            "office",
+            "gridX",
+            "gridY",
+            "pointType",
+            "forecastZone",
+            "forecastEndpoint",
+            "forecastHourlyEndpoint",
+            "forecastGridDataEndpoint",
+            "radarStation",
+            "attribution"
+          ],
           "properties": {
-            "office": { "type": "string", "minLength": 1 },
-            "gridX": { "type": "integer" },
-            "gridY": { "type": "integer" },
-            "forecastEndpoint": { "type": "string", "minLength": 1 },
-            "forecastHourlyEndpoint": { "type": "string", "minLength": 1 }
+            "office": {
+              "type": "string",
+              "description": "NWS CWA (County Warning Area) office identifier, e.g. 'BOX'.",
+              "minLength": 1
+            },
+            "gridX": { "type": "integer", "description": "NWS grid X coordinate." },
+            "gridY": { "type": "integer", "description": "NWS grid Y coordinate." },
+            "pointType": {
+              "type": "string",
+              "description": "NWS point type returned by the Points API ('land' or 'marine').",
+              "enum": ["land", "marine"]
+            },
+            "forecastZone": {
+              "type": "string",
+              "description": "NWS forecast zone identifier, e.g. 'ANZ232'.",
+              "minLength": 1
+            },
+            "forecastEndpoint": {
+              "type": "string",
+              "description": "Full URL for the NWS 12-hourly forecast endpoint.",
+              "minLength": 1
+            },
+            "forecastHourlyEndpoint": {
+              "type": "string",
+              "description": "Full URL for the NWS hourly forecast endpoint.",
+              "minLength": 1
+            },
+            "forecastGridDataEndpoint": {
+              "type": "string",
+              "description": "Full URL for the NWS grid data endpoint (provides wind direction in degrees and gust values).",
+              "minLength": 1
+            },
+            "radarStation": {
+              "type": "string",
+              "description": "NEXRAD radar station identifier for the grid cell, e.g. 'KBOX'.",
+              "minLength": 1
+            },
+            "attribution": {
+              "type": "string",
+              "description": "Human-readable attribution required when displaying NWS data.",
+              "minLength": 1
+            }
           },
           "additionalProperties": false
         }

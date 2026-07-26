@@ -34,6 +34,18 @@ const spot = JSON.parse(fs.readFileSync(path.join(here, 'west-dennis-beach-ma.js
         onAllFailed: 'NO_GO';
       };
     };
+    nwsGridpoint?: {
+      office: string;
+      gridX: number;
+      gridY: number;
+      pointType: 'land' | 'marine';
+      forecastZone: string;
+      forecastEndpoint: string;
+      forecastHourlyEndpoint: string;
+      forecastGridDataEndpoint: string;
+      radarStation: string;
+      attribution: string;
+    };
   };
   validationStatus: string;
   active: boolean;
@@ -79,15 +91,13 @@ describe('west-dennis-beach-ma spot configuration', () => {
 
   it('records every deferred safety-critical and provider field as unresolved', () => {
     const fields = (spot.unresolved ?? []).map((entry) => entry.field);
-    for (const required of [
-      'shore.seawardBearingDegrees',
-      'shore.acceptedWindSectors',
-      'sources.nwsGridpoint',
-    ]) {
+    for (const required of ['shore.seawardBearingDegrees', 'shore.acceptedWindSectors']) {
       expect(fields).toContain(required);
     }
     // Resolved by issue #3 — must no longer appear in unresolved
     expect(fields).not.toContain('sources.noaaTideStation');
+    // Resolved by issue #4 — must no longer appear in unresolved
+    expect(fields).not.toContain('sources.nwsGridpoint');
     expect(fields).not.toContain('location.latitude');
     expect(fields).not.toContain('location.longitude');
     expect(fields).not.toContain('municipality');
@@ -113,6 +123,20 @@ describe('west-dennis-beach-ma spot configuration', () => {
     expect(fallback?.stations.length).toBeGreaterThan(0);
     expect(fallback?.stations[0]?.stationId).toBe('8447525');
     expect(fallback?.onAllFailed).toBe('NO_GO');
+  });
+
+  it('specifies the validated NWS grid point and forecast endpoints', () => {
+    const gp = spot.sources?.nwsGridpoint;
+    expect(gp).toBeDefined();
+    expect(gp?.office).toBe('BOX');
+    expect(gp?.gridX).toBe(107);
+    expect(gp?.gridY).toBe(74);
+    expect(gp?.pointType).toBe('marine');
+    expect(gp?.forecastZone).toBe('ANZ232');
+    expect(gp?.forecastHourlyEndpoint).toContain('BOX/107,74');
+    expect(gp?.forecastGridDataEndpoint).toContain('BOX/107,74');
+    expect(gp?.radarStation).toBe('KBOX');
+    expect(gp?.attribution).toContain('BOX');
   });
 
   it('keeps latitude and longitude within valid ranges', () => {

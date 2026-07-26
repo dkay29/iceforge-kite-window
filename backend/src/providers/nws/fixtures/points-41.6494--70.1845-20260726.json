@@ -1,0 +1,110 @@
+{
+  "@context": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    {
+      "@version": "1.1",
+      "wx": "https://api.weather.gov/ontology#",
+      "s": "https://schema.org/",
+      "geo": "http://www.opengis.net/ont/geosparql#",
+      "unit": "http://codes.wmo.int/common/unit/",
+      "@vocab": "https://api.weather.gov/ontology#",
+      "geometry": {
+        "@id": "s:GeoCoordinates",
+        "@type": "geo:wktLiteral"
+      },
+      "city": "s:addressLocality",
+      "state": "s:addressRegion",
+      "distance": {
+        "@id": "s:Distance",
+        "@type": "s:QuantitativeValue"
+      },
+      "bearing": {
+        "@type": "s:QuantitativeValue"
+      },
+      "value": {
+        "@id": "s:value"
+      },
+      "unitCode": {
+        "@id": "s:unitCode",
+        "@type": "@id"
+      },
+      "forecastOffice": {
+        "@type": "@id"
+      },
+      "forecastGridData": {
+        "@type": "@id"
+      },
+      "publicZone": {
+        "@type": "@id"
+      },
+      "county": {
+        "@type": "@id"
+      }
+    }
+  ],
+  "id": "https://api.weather.gov/points/41.6494,-70.1845",
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-70.1845, 41.6494]
+  },
+  "properties": {
+    "@id": "https://api.weather.gov/points/41.6494,-70.1845",
+    "@type": "wx:Point",
+    "cwa": "BOX",
+    "type": "marine",
+    "forecastOffice": "https://api.weather.gov/offices/BOX",
+    "gridId": "BOX",
+    "gridX": 107,
+    "gridY": 74,
+    "forecast": "https://api.weather.gov/gridpoints/BOX/107,74/forecast",
+    "forecastHourly": "https://api.weather.gov/gridpoints/BOX/107,74/forecast/hourly",
+    "forecastGridData": "https://api.weather.gov/gridpoints/BOX/107,74",
+    "observationStations": "https://api.weather.gov/gridpoints/BOX/107,74/stations",
+    "relativeLocation": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.1658547, 41.6667162]
+      },
+      "properties": {
+        "city": "West Dennis",
+        "state": "MA",
+        "distance": {
+          "unitCode": "wmoUnit:m",
+          "value": 0
+        },
+        "bearing": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 0
+        }
+      }
+    },
+    "forecastZone": "https://api.weather.gov/zones/forecast/ANZ232",
+    "timeZone": "America/New_York",
+    "radarStation": "KBOX",
+    "astronomicalData": {
+      "sunrise": "2026-07-26T05:28:03-04:00",
+      "sunset": "2026-07-26T20:06:32-04:00",
+      "transit": "2026-07-26T12:47:18-04:00",
+      "civilTwilightBegin": "2026-07-26T04:57:45-04:00",
+      "civilTwilightEnd": "2026-07-26T20:36:50-04:00",
+      "nauticalTwilightBegin": "2026-07-26T04:17:55-04:00",
+      "nauticalTwilightEnd": "2026-07-26T21:16:40-04:00",
+      "astronomicalTwilightBegin": "2026-07-26T03:32:56-04:00",
+      "astronomicalTwilightEnd": "2026-07-26T22:01:39-04:00"
+    },
+    "nwr": {
+      "transmitter": null,
+      "sameCode": null,
+      "areaBroadcast": null,
+      "pointBroadcast": "https://api.weather.gov/points/41.6494,-70.1845/radio"
+    }
+  },
+  "_meta": {
+    "capturedAt": "2026-07-26T18:53:37+00:00",
+    "source": "NWS API \u2014 Points",
+    "url": "https://api.weather.gov/points/41.6494,-70.1845",
+    "purpose": "Captured fixture for integration tests \u2014 validates that coordinates resolve to BOX/107,74 and returns well-formed gridpoint metadata for West Dennis Beach."
+  }
+}

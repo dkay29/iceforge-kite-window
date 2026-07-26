@@ -1,4 +1,4 @@
-# Spot Configuration: West Dennis Beach (Issues #2 and #3)
+# Spot Configuration: West Dennis Beach (Issues #2, #3, and #4)
 
 This document records the canonical West Dennis spot configuration
 (`backend/src/config/spots/west-dennis-beach-ma.json`, validated against
@@ -10,6 +10,10 @@ Issue #2 validates identity, location, timezone, and version metadata.
 Issue #3 selects and validates the NOAA CO-OPS tide station. See
 [`docs/noaa-tide-station.md`](noaa-tide-station.md) for full station suitability
 rationale, datum information, and fallback policy.
+
+Issue #4 resolves the NWS grid point and forecast endpoints. See
+[`docs/nws-gridpoint.md`](nws-gridpoint.md) for the full resolution record,
+endpoint URLs, and data format findings.
 
 NWS grid mapping, shore bearing, and accepted/prohibited wind sectors are owned
 by later issues (see [Unresolved fields](#unresolved-fields) below) and are
@@ -31,8 +35,9 @@ placeholder values.
 | `location.datum`                    | `NAD83`                | Reported by the Massachusetts DPH monitoring-site record.                                                                                                                                                                   |
 | `location.timezone`                 | `America/New_York`     | Assigned per issue #2 task instructions; consistent with Massachusetts.                                                                                                                                                     |
 | `launchPoint`                       | `41.6494, -70.1845`    | Same coordinate as `location`: the DPH monitoring point at the west end of West Dennis Beach. Used as the initial representative launch coordinate; may be supplemented in a later issue.                                   |
-| `version`                           | `3`                    | Revision 3: adds `sources.noaaTideStation` (issue #3).                                                                                                                                                                      |
+| `version`                           | `4`                    | Revision 4: adds `sources.nwsGridpoint` (issue #4). Revision 3 added `sources.noaaTideStation` (issue #3).                                                                                                                  |
 | `sources.noaaTideStation.stationId` | `8447504`              | NOAA CO-OPS station South Yarmouth, Bass River — nearest tide-prediction station to West Dennis Beach (~1.8 km). Subordinate station referencing Boston (8443970). See [`docs/noaa-tide-station.md`](noaa-tide-station.md). |
+| `sources.nwsGridpoint.office`       | `BOX`                  | NWS Boston/Norton, MA. Resolved via Points API on 2026-07-26. Point type `marine`; forecast zone ANZ232. Grid 107,74. See [`docs/nws-gridpoint.md`](nws-gridpoint.md).                                                      |
 | `validationStatus`                  | `PARTIALLY_VALIDATED`  | Identity, timezone, and geographic coordinate fields are established; all safety-critical and provider fields remain unresolved.                                                                                            |
 | `active`                            | `false`                | Must stay `false` until shore bearing, wind sectors, and provider mappings are validated and `validationStatus` reaches `VALIDATED`.                                                                                        |
 
@@ -55,7 +60,7 @@ Recorded in the `unresolved` array of the configuration document:
 | `shore.seawardBearingDegrees`                          | Requires a site survey.                                                                                                                                 | #5                                                         |
 | `shore.acceptedWindSectors` / `.prohibitedWindSectors` | Depend on validated shore bearing.                                                                                                                      | #5                                                         |
 | `sources.noaaTideStation`                              | **Resolved by issue #3.** Station 8447504 (South Yarmouth, Bass River) selected and validated. See [`docs/noaa-tide-station.md`](noaa-tide-station.md). | —                                                          |
-| `sources.nwsGridpoint`                                 | NWS grid-point/endpoint resolution not yet performed.                                                                                                   | #4                                                         |
+| `sources.nwsGridpoint`                                 | **Resolved by issue #4.** Office BOX, grid 107,74, marine point type. See [`docs/nws-gridpoint.md`](nws-gridpoint.md).                                  | —                                                          |
 | `defaultRulesetId`                                     | No ruleset authored/published yet.                                                                                                                      | Unassigned — later phase per `docs/issues-plan.md` Phase 2 |
 
 ## Schema changes
@@ -67,6 +72,15 @@ Recorded in the `unresolved` array of the configuration document:
 - `village` — optional string for postal sub-municipal locality names.
 - `location.datum` — optional string for the geodetic datum of the coordinate pair.
 - `launchPoint.datum` — same, on the launch-point object.
+
+### Issue #4
+
+`schemas/spot.schema.json` was updated to:
+
+- Replace the open `nwsGridpoint` placeholder with a required-fields definition
+  covering `office`, `gridX`, `gridY`, `pointType`, `forecastZone`,
+  `forecastEndpoint`, `forecastHourlyEndpoint`, `forecastGridDataEndpoint`,
+  `radarStation`, and `attribution`.
 
 ### Issue #3
 

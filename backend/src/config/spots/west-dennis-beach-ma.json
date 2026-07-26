@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "version": 3,
+  "version": 4,
   "spotId": "west-dennis-beach-ma",
   "name": "West Dennis Beach",
   "municipality": "Dennis",
@@ -41,6 +41,18 @@
         ],
         "onAllFailed": "NO_GO"
       }
+    },
+    "nwsGridpoint": {
+      "office": "BOX",
+      "gridX": 107,
+      "gridY": 74,
+      "pointType": "marine",
+      "forecastZone": "ANZ232",
+      "forecastEndpoint": "https://api.weather.gov/gridpoints/BOX/107,74/forecast",
+      "forecastHourlyEndpoint": "https://api.weather.gov/gridpoints/BOX/107,74/forecast/hourly",
+      "forecastGridDataEndpoint": "https://api.weather.gov/gridpoints/BOX/107,74",
+      "radarStation": "KBOX",
+      "attribution": "National Weather Service, Boston/Norton MA (BOX)"
     }
   },
   "validationStatus": "PARTIALLY_VALIDATED",
@@ -53,7 +65,8 @@
     "spotId: 'west-dennis-beach-ma' assigned per explicit task instruction.",
     "municipality / village: 'Dennis' is the Town of Dennis, Massachusetts. 'West Dennis' is a postal village (locality) within the Town of Dennis. Verified by the project owner using live authoritative sources outside this container.",
     "location.latitude / location.longitude / launchPoint: coordinate 41.6494°N, -70.1845°W (NAD83) is the Massachusetts Department of Public Health water-quality monitoring point named 'West Dennis (West) — Location 1', site identifier 21MABCH-MA649766-1. Sourced by the project owner from live authoritative data outside this container and accepted as the canonical representative coordinate for issue #2.",
-    "sources.noaaTideStation: station 8447504 (South Yarmouth, Bass River) selected as primary tide station for issue #3. Station is a NOAA CO-OPS subordinate station (type S) located at the mouth of Bass River, Nantucket Sound, 1.8 km from West Dennis Beach. Subordinate to Boston (8443970). Time offsets: HW +108 min, LW +106 min; height ratio: 0.29. Hi-lo tide predictions retrieved successfully via NOAA CO-OPS Tide Predictions API on 2026-07-26. 6-minute interval predictions are not available for subordinate stations; hi-lo is the operational interval. Datum is MLLW (Mean Lower Low Water), the standard NOAA CO-OPS datum for US tide predictions. Fallback station 8447525 (Dennisport) verified independently on same date."
+    "sources.noaaTideStation: station 8447504 (South Yarmouth, Bass River) selected as primary tide station for issue #3. Station is a NOAA CO-OPS subordinate station (type S) located at the mouth of Bass River, Nantucket Sound, 1.8 km from West Dennis Beach. Subordinate to Boston (8443970). Time offsets: HW +108 min, LW +106 min; height ratio: 0.29. Hi-lo tide predictions retrieved successfully via NOAA CO-OPS Tide Predictions API on 2026-07-26. 6-minute interval predictions are not available for subordinate stations; hi-lo is the operational interval. Datum is MLLW (Mean Lower Low Water), the standard NOAA CO-OPS datum for US tide predictions. Fallback station 8447525 (Dennisport) verified independently on same date.",
+    "sources.nwsGridpoint: resolved via NWS Points API (https://api.weather.gov/points/41.6494,-70.1845) on 2026-07-26. Office BOX (Boston/Norton MA); grid X=107, Y=74. Point type is 'marine' (NWS classifies this cell as a marine forecast grid, forecast zone ANZ232 — Nantucket Sound). Hourly forecast, 12-hourly forecast, and grid data endpoints all confirmed reachable. Grid data endpoint provides windDirection in degrees and windGust in km/h, which are the preferred inputs for the decision engine. Radar station KBOX confirmed. Relative location returned by API is 'West Dennis, MA' at distance 0."
   ],
   "assumptions": [
     "active is set to false because safety-critical fields (shore bearing, accepted/prohibited wind sectors, NOAA tide station, NWS grid mapping) are not yet validated; the spot must not be surfaced as usable until those follow-up issues resolve their fields and validationStatus is raised to VALIDATED.",
@@ -75,11 +88,6 @@
       "field": "shore.prohibitedWindSectors",
       "reason": "Prohibited wind sectors depend on the validated shore bearing and site-specific review; not yet determined.",
       "followUpIssue": "#5"
-    },
-    {
-      "field": "sources.nwsGridpoint",
-      "reason": "NWS grid-point and forecast-endpoint resolution has not been performed.",
-      "followUpIssue": "#4"
     },
     {
       "field": "defaultRulesetId",

@@ -1,0 +1,188 @@
+{
+  "@context": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    {
+      "@version": "1.1",
+      "wmoUnit": "https://codes.wmo.int/common/unit/",
+      "nwsUnit": "https://api.weather.gov/ontology/unit/"
+    }
+  ],
+  "id": "https://api.weather.gov/gridpoints/BOX/107,74",
+  "type": "Feature",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [-70.1618, 41.6301],
+        [-70.1565, 41.6516],
+        [-70.1852, 41.6556],
+        [-70.1905, 41.6341],
+        [-70.1618, 41.6301]
+      ]
+    ]
+  },
+  "properties": {
+    "updateTime": "2026-07-26T11:21:01+00:00",
+    "validTimes": "2026-07-26T05:00:00+00:00/P7DT20H",
+    "elevation": {
+      "unitCode": "wmoUnit:m",
+      "value": 0
+    },
+    "forecastOffice": "https://api.weather.gov/offices/BOX",
+    "gridId": "BOX",
+    "gridX": 107,
+    "gridY": 74,
+    "windDirection": {
+      "uom": "wmoUnit:degree_(angle)",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT4H",
+          "value": 40
+        },
+        {
+          "validTime": "2026-07-26T09:00:00+00:00/PT4H",
+          "value": 30
+        },
+        {
+          "validTime": "2026-07-26T13:00:00+00:00/PT1H",
+          "value": 40
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "windSpeed": {
+      "uom": "wmoUnit:km_h-1",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT4H",
+          "value": 9.26
+        },
+        {
+          "validTime": "2026-07-26T09:00:00+00:00/PT1H",
+          "value": 11.112
+        },
+        {
+          "validTime": "2026-07-26T10:00:00+00:00/PT2H",
+          "value": 12.964
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "windGust": {
+      "uom": "wmoUnit:km_h-1",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT4H",
+          "value": 20.372
+        },
+        {
+          "validTime": "2026-07-26T09:00:00+00:00/PT1H",
+          "value": 22.224
+        },
+        {
+          "validTime": "2026-07-26T10:00:00+00:00/PT4H",
+          "value": 24.076
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "skyCover": {
+      "uom": "wmoUnit:percent",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT1H",
+          "value": 19
+        },
+        {
+          "validTime": "2026-07-26T06:00:00+00:00/PT1H",
+          "value": 9
+        },
+        {
+          "validTime": "2026-07-26T07:00:00+00:00/PT1H",
+          "value": 35
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "probabilityOfPrecipitation": {
+      "uom": "wmoUnit:percent",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT4H",
+          "value": 0
+        },
+        {
+          "validTime": "2026-07-26T09:00:00+00:00/PT1H",
+          "value": 1
+        },
+        {
+          "validTime": "2026-07-26T10:00:00+00:00/PT2H",
+          "value": 2
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "probabilityOfThunder": {
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/P1DT7H",
+          "value": 0
+        },
+        {
+          "validTime": "2026-07-27T12:00:00+00:00/PT2H",
+          "value": 1
+        },
+        {
+          "validTime": "2026-07-27T14:00:00+00:00/PT22H",
+          "value": 0
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "temperature": {
+      "uom": "wmoUnit:degC",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT2H",
+          "value": 17.77777777777778
+        },
+        {
+          "validTime": "2026-07-26T07:00:00+00:00/PT3H",
+          "value": 17.22222222222222
+        },
+        {
+          "validTime": "2026-07-26T10:00:00+00:00/PT1H",
+          "value": 16.666666666666668
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    },
+    "waveHeight": {
+      "uom": "wmoUnit:m",
+      "values": [
+        {
+          "validTime": "2026-07-26T05:00:00+00:00/PT8H",
+          "value": 0.3048
+        },
+        {
+          "validTime": "2026-07-26T13:00:00+00:00/PT10H",
+          "value": 0.6096
+        },
+        {
+          "validTime": "2026-07-26T23:00:00+00:00/P1DT17H",
+          "value": 0.3048
+        }
+      ],
+      "_note": "trimmed to 3 values for fixture; full response has more"
+    }
+  },
+  "_meta": {
+    "capturedAt": "2026-07-26T18:53:37+00:00",
+    "source": "NWS API \u2014 Grid Data",
+    "url": "https://api.weather.gov/gridpoints/BOX/107,74",
+    "office": "BOX",
+    "gridX": 107,
+    "gridY": 74,
+    "purpose": "Captured fixture for integration tests. Trimmed to 8 key properties with 3 values each. Full response has 57 properties."
+  }
+}
