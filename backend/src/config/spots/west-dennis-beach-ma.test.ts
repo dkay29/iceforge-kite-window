@@ -17,6 +17,36 @@ const spot = JSON.parse(fs.readFileSync(path.join(here, 'west-dennis-beach-ma.js
   village?: string;
   location: { latitude?: number; longitude?: number; datum?: string; timezone: string };
   launchPoint?: { latitude?: number; longitude?: number; datum?: string; description?: string };
+  sources?: {
+    noaaTideStation?: {
+      stationId: string;
+      name: string;
+      stationType: 'H' | 'S';
+      referenceStationId?: string;
+      datum: string;
+      lat: number;
+      lng: number;
+      distanceKm: number;
+      availableProducts: string[];
+      predictionIntervals?: string[];
+      fallback: {
+        stations: Array<{ stationId: string; name: string; reason: string }>;
+        onAllFailed: 'NO_GO';
+      };
+    };
+    nwsGridpoint?: {
+      office: string;
+      gridX: number;
+      gridY: number;
+      pointType: 'land' | 'marine';
+      forecastZone: string;
+      forecastEndpoint: string;
+      forecastHourlyEndpoint: string;
+      forecastGridDataEndpoint: string;
+      radarStation: string;
+      attribution: string;
+    };
+  };
   validationStatus: string;
   active: boolean;
   unresolved?: Array<{ field: string; reason: string; followUpIssue?: string }>;
@@ -61,18 +91,52 @@ describe('west-dennis-beach-ma spot configuration', () => {
 
   it('records every deferred safety-critical and provider field as unresolved', () => {
     const fields = (spot.unresolved ?? []).map((entry) => entry.field);
-    for (const required of [
-      'shore.seawardBearingDegrees',
-      'shore.acceptedWindSectors',
-      'sources.noaaTideStation',
-      'sources.nwsGridpoint',
-    ]) {
+    for (const required of ['shore.seawardBearingDegrees', 'shore.acceptedWindSectors']) {
       expect(fields).toContain(required);
     }
+    // Resolved by issue #3 — must no longer appear in unresolved
+    expect(fields).not.toContain('sources.noaaTideStation');
+    // Resolved by issue #4 — must no longer appear in unresolved
+    expect(fields).not.toContain('sources.nwsGridpoint');
     expect(fields).not.toContain('location.latitude');
     expect(fields).not.toContain('location.longitude');
     expect(fields).not.toContain('municipality');
     expect(fields).not.toContain('launchPoint');
+  });
+
+  it('specifies the validated NOAA CO-OPS tide station', () => {
+    const station = spot.sources?.noaaTideStation;
+    expect(station).toBeDefined();
+    expect(station?.stationId).toBe('8447504');
+    expect(station?.name).toBe('South Yarmouth, Bass River');
+    expect(station?.stationType).toBe('S');
+    expect(station?.referenceStationId).toBe('8443970');
+    expect(station?.datum).toBe('MLLW');
+    expect(station?.distanceKm).toBeLessThanOrEqual(5);
+    expect(station?.availableProducts).toContain('predictions');
+    expect(station?.predictionIntervals).toContain('hilo');
+  });
+
+  it('specifies a fallback tide station and an explicit on-failure policy', () => {
+    const fallback = spot.sources?.noaaTideStation?.fallback;
+    expect(fallback).toBeDefined();
+    expect(fallback?.stations.length).toBeGreaterThan(0);
+    expect(fallback?.stations[0]?.stationId).toBe('8447525');
+    expect(fallback?.onAllFailed).toBe('NO_GO');
+  });
+
+  it('specifies the validated NWS grid point and forecast endpoints', () => {
+    const gp = spot.sources?.nwsGridpoint;
+    expect(gp).toBeDefined();
+    expect(gp?.office).toBe('BOX');
+    expect(gp?.gridX).toBe(107);
+    expect(gp?.gridY).toBe(74);
+    expect(gp?.pointType).toBe('marine');
+    expect(gp?.forecastZone).toBe('ANZ232');
+    expect(gp?.forecastHourlyEndpoint).toContain('BOX/107,74');
+    expect(gp?.forecastGridDataEndpoint).toContain('BOX/107,74');
+    expect(gp?.radarStation).toBe('KBOX');
+    expect(gp?.attribution).toContain('BOX');
   });
 
   it('keeps latitude and longitude within valid ranges', () => {
