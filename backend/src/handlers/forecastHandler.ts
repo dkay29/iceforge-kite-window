@@ -23,6 +23,8 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda
 import { currentDailyPointerKey } from '../s3Keys.js';
 import type { CurrentPointer } from '../publisher.js';
 import type { PublishedSpotForecast } from '../generated/schema-types.js';
+import { resolveCorrelationId, CORRELATION_ID_HEADER } from '../observability/correlationId.js';
+import { createLogger, recordMetric } from '../observability/logger.js';
 
 // ─── S3 reader interface ──────────────────────────────────────────────────────
 
@@ -59,14 +61,16 @@ const LOCAL_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function createForecastHandler(deps: { s3: S3Reader }) {
   return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-    const requestId =
-      event.requestContext?.requestId ?? event.headers?.['x-request-id'] ?? 'unknown';
+    const requestId = event.requestContext?.requestId ?? 'unknown';
+    const correlationId = resolveCorrelationId(event.headers, requestId);
+    const log = createLogger({ correlationId, handler: 'forecastHandler' });
 
     try {
-      return await handleForecast(event, deps.s3, requestId);
+      return await handleForecast(event, deps.s3, correlationId, log);
     } catch (err) {
-      console.error('Unhandled error in forecastHandler', { requestId, err });
-      return internalError(requestId);
+      log.error('Unhandled error in forecastHandler', { error: String(err) });
+      recordMetric(log, 'refresh_failure', 1);
+      return internalError(correlationId);
     }
   };
 }
@@ -76,8 +80,10 @@ export function createForecastHandler(deps: { s3: S3Reader }) {
 async function handleForecast(
   event: APIGatewayProxyEventV2,
   s3: S3Reader,
-  requestId: string,
+  correlationId: string,
+  log: ReturnType<typeof createLogger>,
 ): Promise<APIGatewayProxyResultV2> {
+  const requestId = correlationId;
   // 1. Parse and validate path/query parameters
   const spotId = event.pathParameters?.['spotId'];
   const date = event.queryStringParameters?.['date'];
@@ -98,13 +104,19 @@ async function handleForecast(
   }
 
   const pointer = rawPointer as CurrentPointer;
+  const spotLog = log.child({ spotId, localDate: date, forecastRunId: pointer.forecastRunId });
 
   // 3. Check If-None-Match ETag — headers are lowercase in API Gateway v2
   const clientEtag = event.headers?.['if-none-match'];
   const serverEtag = `"${pointer.forecastRunId}"`;
 
   if (clientEtag === serverEtag) {
-    return { statusCode: 304, headers: { ETag: serverEtag } };
+    spotLog.info('Forecast cache hit (304)', { etag: serverEtag });
+    recordMetric(spotLog, 'forecast_cache_hit', 1, { spotId, localDate: date });
+    return {
+      statusCode: 304,
+      headers: { ETag: serverEtag, [CORRELATION_ID_HEADER]: correlationId },
+    };
   }
 
   // 4. Load the immutable published forecast
@@ -115,7 +127,17 @@ async function handleForecast(
 
   const forecast = rawForecast as PublishedSpotForecast;
 
-  // 5. Build response headers
+  // 5. Compute source freshness lag and emit metrics
+  const generatedAtMs = new Date(forecast.generatedAt).getTime();
+  const freshnessLagSeconds = Math.round((Date.now() - generatedAtMs) / 1000);
+  recordMetric(spotLog, 'source_freshness_lag_seconds', freshnessLagSeconds, {
+    spotId,
+    localDate: date,
+  });
+  recordMetric(spotLog, 'forecast_served', 1, { spotId, localDate: date });
+  spotLog.info('Forecast served', { freshnessLagSeconds });
+
+  // 6. Build response headers
   const lastModified = new Date(forecast.generatedAt).toUTCString();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -125,6 +147,7 @@ async function handleForecast(
     'X-Forecast-Generated-At': forecast.generatedAt,
     'X-Forecast-Expires-At': forecast.expiresAt,
     'X-Request-Id': requestId,
+    [CORRELATION_ID_HEADER]: correlationId,
   };
 
   return {
