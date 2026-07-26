@@ -156,7 +156,8 @@ describe('buildForecast — schema fields', () => {
   });
 
   it('omits spot.region when not provided', () => {
-    const doc = buildForecast(makeInput({ spot: { ...SPOT, region: undefined } }));
+    const spotNoRegion = { spotId: SPOT.spotId, name: SPOT.name, timezone: SPOT.timezone };
+    const doc = buildForecast(makeInput({ spot: spotNoRegion }));
     expect(doc.spot.region).toBeUndefined();
   });
 
