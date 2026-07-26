@@ -1,0 +1,16 @@
+{
+  "_meta": {
+    "purpose": "Edge-case fixture: all grid properties have empty values arrays. Simulates a valid API response shape with no forecast data."
+  },
+  "properties": {
+    "updateTime": "2026-07-26T11:00:00+00:00",
+    "validTimes": "2026-07-26T11:00:00+00:00/P0D",
+    "windDirection": { "uom": "wmoUnit:degree_(angle)", "values": [] },
+    "windSpeed": { "uom": "wmoUnit:km_h-1", "values": [] },
+    "windGust": { "uom": "wmoUnit:km_h-1", "values": [] },
+    "skyCover": { "uom": "wmoUnit:percent", "values": [] },
+    "probabilityOfPrecipitation": { "uom": "wmoUnit:percent", "values": [] },
+    "probabilityOfThunder": { "values": [] },
+    "temperature": { "uom": "wmoUnit:degC", "values": [] }
+  }
+}

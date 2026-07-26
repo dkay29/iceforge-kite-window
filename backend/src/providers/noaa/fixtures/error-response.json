@@ -1,0 +1,8 @@
+{
+  "_meta": {
+    "purpose": "Edge-case fixture: NOAA CO-OPS error envelope. Simulates a station ID that the API does not recognise, or a request for an unavailable product."
+  },
+  "error": {
+    "message": "No data was found. This product may not be available for this station."
+  }
+}

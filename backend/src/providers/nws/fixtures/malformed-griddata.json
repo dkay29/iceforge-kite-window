@@ -1,0 +1,7 @@
+{
+  "_meta": {
+    "purpose": "Edge-case fixture: missing required 'properties' key. Simulates a truncated or corrupt NWS API response that must be rejected by the provider."
+  },
+  "type": "Feature",
+  "id": "https://api.weather.gov/gridpoints/BOX/107,74"
+}
