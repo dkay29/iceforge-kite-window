@@ -24,6 +24,7 @@ const schemaFiles = [
   'ruleset.schema.json',
   'published-forecast.schema.json',
   'normalized-timeline.schema.json',
+  'user-preferences.schema.json',
 ];
 
 const options = {

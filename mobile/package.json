@@ -53,9 +53,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(react-native|@react-native|@react-navigation|react-native-screens|react-native-safe-area-context)/)"
     ],
-    "setupFilesAfterEnv": [
-      "@testing-library/react-native/extend-expect"
-    ]
+    "setupFilesAfterEnv": []
   },
   "engines": {
     "node": ">=18"
