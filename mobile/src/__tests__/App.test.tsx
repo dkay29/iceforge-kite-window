@@ -33,9 +33,14 @@ const settingsRoute = { key: 'Settings-1', name: 'Settings' as const, params: un
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('TodayScreen', () => {
-  it('renders placeholder text', () => {
-    const { getByText } = render(<TodayScreen navigation={mockNavigation} route={todayRoute} />);
-    expect(getByText('Forecast loading… (implementation in issue #27)')).toBeTruthy();
+  it('renders a loading indicator on mount while fetching forecast', () => {
+    // TodayScreen starts in loading state while it fetches the forecast from the API.
+    const { UNSAFE_getAllByType } = render(
+      <TodayScreen navigation={mockNavigation} route={todayRoute} />,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { ActivityIndicator } = require('react-native');
+    expect(UNSAFE_getAllByType(ActivityIndicator).length).toBeGreaterThan(0);
   });
 });
 
