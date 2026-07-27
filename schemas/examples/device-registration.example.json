@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "deviceId": "550e8400-e29b-41d4-a716-446655440000",
+  "platform": "apns",
+  "token": "apns-device-token-placeholder-64-hex-chars-here-000000000000000000",
+  "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "registeredAt": "2026-07-26T14:00:00Z",
+  "updatedAt": "2026-07-26T14:00:00Z"
+}

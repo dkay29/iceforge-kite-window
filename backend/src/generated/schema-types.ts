@@ -536,3 +536,44 @@ export interface UserPreferences {
     windowOpenAlertMinutesBefore?: number;
   };
 }
+
+// ─── device-registration.schema.json ───────────────────────────────────────────
+/**
+ * AUTO-GENERATED — do not edit by hand.
+ * Run `npm run generate:types` after schema changes.
+ * Source: tools/generate-types.mjs
+ */
+
+/**
+ * Push notification device registration record stored per user per device.
+ */
+export interface DeviceRegistration {
+  /**
+   * Schema version for forward-compatibility checks.
+   */
+  schemaVersion: 1;
+  /**
+   * Client-generated stable device identifier (e.g. UUID).
+   */
+  deviceId: string;
+  /**
+   * Push platform: apns for iOS/macOS, fcm for Android.
+   */
+  platform: 'apns' | 'fcm';
+  /**
+   * Current APNs device token or FCM registration token.
+   */
+  token: string;
+  /**
+   * Cognito sub (UUID) that owns this device registration.
+   */
+  userId: string;
+  /**
+   * ISO 8601 UTC timestamp when the device was first registered.
+   */
+  registeredAt: string;
+  /**
+   * ISO 8601 UTC timestamp of the most recent token update.
+   */
+  updatedAt: string;
+}

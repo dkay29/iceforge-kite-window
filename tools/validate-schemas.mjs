@@ -21,6 +21,7 @@ const documentsBySchema = {
   'ruleset.schema.json': ['schemas/examples/ruleset.example.json'],
   'normalized-timeline.schema.json': ['schemas/examples/normalized-timeline.example.json'],
   'user-preferences.schema.json': ['schemas/examples/user-preferences.example.json'],
+  'device-registration.schema.json': ['schemas/examples/device-registration.example.json'],
 };
 
 let hasDocumentErrors = false;

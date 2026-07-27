@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.example/schemas/device-registration.schema.json",
+  "title": "DeviceRegistration",
+  "description": "Push notification device registration record stored per user per device.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "deviceId",
+    "platform",
+    "token",
+    "userId",
+    "registeredAt",
+    "updatedAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version for forward-compatibility checks."
+    },
+    "deviceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Client-generated stable device identifier (e.g. UUID)."
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["apns", "fcm"],
+      "description": "Push platform: apns for iOS/macOS, fcm for Android."
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "description": "Current APNs device token or FCM registration token."
+    },
+    "userId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Cognito sub (UUID) that owns this device registration."
+    },
+    "registeredAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when the device was first registered."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of the most recent token update."
+    }
+  }
+}
