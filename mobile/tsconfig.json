@@ -4,7 +4,10 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-native",
+    "skipLibCheck": true,
+    "types": ["jest", "react", "react-native"]
   },
   "include": ["src", "index.js", "index.ts"]
 }
