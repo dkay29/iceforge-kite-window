@@ -3,6 +3,7 @@ import {
   currentDailyPointerKey,
   currentLatestPointerKey,
   normalizedTimelineKey,
+  notificationSentKey,
   publishedForecastKey,
   rawTideNoaaKey,
   rawWeatherNwsKey,
@@ -156,6 +157,20 @@ describe('userDeviceKey', () => {
   });
   it('throws on empty cognitoSub', () => {
     expect(() => userDeviceKey('', 'device-xyz')).toThrow('cognitoSub');
+  });
+});
+
+describe('notificationSentKey', () => {
+  it('produces the correct key', () => {
+    expect(notificationSentKey(SPOT, DATE, RUN)).toBe(
+      'notifications/spot=west-dennis-beach-ma/date=2026-07-26/run=2026-07-26T06:00:00Z/sent.json',
+    );
+  });
+  it('throws on empty spotId', () => {
+    expect(() => notificationSentKey('', DATE, RUN)).toThrow('spotId');
+  });
+  it('throws on empty forecastRunId', () => {
+    expect(() => notificationSentKey(SPOT, DATE, '')).toThrow('forecastRunId');
   });
 });
 
