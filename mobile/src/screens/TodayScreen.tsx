@@ -19,6 +19,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ForecastTimeline } from '../components/ForecastTimeline';
+import { FreshnessBar } from '../components/FreshnessBar';
 import {
   ForecastService,
   ForecastNotAvailableError,
@@ -154,6 +155,9 @@ export function TodayScreen(_navProps: Props): React.JSX.Element {
           <Text style={styles.spotName}>{spot.name}</Text>
           <Text style={styles.date}>{localDate}</Text>
         </View>
+
+        {/* Freshness indicator — always shown so stale data is never silent */}
+        <FreshnessBar generatedAt={forecast.generatedAt} expiresAt={forecast.expiresAt} />
 
         {/* Recommendation badge */}
         <View style={[styles.badge, { backgroundColor: statusColor }]}>
