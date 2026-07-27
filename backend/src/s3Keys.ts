@@ -105,3 +105,22 @@ export function userDeviceKey(cognitoSub: string, deviceId: string): string {
   assertSafe(deviceId, 'deviceId');
   return `users/${cognitoSub}/devices/${deviceId}.json`;
 }
+
+// ─── Notification deduplication ───────────────────────────────────────────────
+
+/**
+ * Marker object written after a fan-out run completes. Its presence indicates
+ * that notifications for this forecast run have already been dispatched.
+ *
+ * Example: notifications/spot=west-dennis-beach-ma/date=2026-07-26/run=2026-07-26T18:00:00Z/sent.json
+ */
+export function notificationSentKey(
+  spotId: string,
+  localDate: string,
+  forecastRunId: string,
+): string {
+  assertSafe(spotId, 'spotId');
+  assertSafe(localDate, 'localDate');
+  assertSafe(forecastRunId, 'forecastRunId');
+  return `notifications/spot=${spotId}/date=${localDate}/run=${forecastRunId}/sent.json`;
+}

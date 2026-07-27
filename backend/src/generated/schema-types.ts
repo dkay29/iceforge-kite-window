@@ -463,3 +463,117 @@ export interface SourceRecord {
   isStale?: boolean;
   attribution?: string;
 }
+
+// ─── user-preferences.schema.json ───────────────────────────────────────────
+/**
+ * AUTO-GENERATED — do not edit by hand.
+ * Run `npm run generate:types` after schema changes.
+ * Source: tools/generate-types.mjs
+ */
+
+/**
+ * Personal safety thresholds and display preferences for one Cognito user.
+ */
+export interface UserPreferences {
+  /**
+   * Schema version for forward-compatibility checks.
+   */
+  schemaVersion: 1;
+  /**
+   * Cognito sub (UUID) that owns these preferences.
+   */
+  userId: string;
+  /**
+   * ISO 8601 UTC timestamp of the last successful PUT.
+   */
+  updatedAt: string;
+  /**
+   * Personal wind-speed thresholds in knots.
+   */
+  windSpeed: {
+    /**
+     * Below this the user cannot fly (score = 0).
+     */
+    minimumUsableKnots: number;
+    preferredMinKnots: number;
+    preferredMaxKnots: number;
+    /**
+     * Above this the user considers it unsafe (score = 0).
+     */
+    absoluteMaxKnots: number;
+  };
+  /**
+   * Personal wind-direction preferences.
+   */
+  windDirection: {
+    /**
+     * Wind-direction sectors the user is willing to fly in.
+     *
+     * @minItems 1
+     */
+    acceptedSectors: [
+      'DIRECT_ONSHORE' | 'SIDE_ONSHORE' | 'CROSS_SHORE' | 'SIDE_OFFSHORE' | 'OFFSHORE',
+      ...('DIRECT_ONSHORE' | 'SIDE_ONSHORE' | 'CROSS_SHORE' | 'SIDE_OFFSHORE' | 'OFFSHORE')[],
+    ];
+  };
+  /**
+   * Personal gust-stability preferences.
+   */
+  gust: {
+    /**
+     * Maximum acceptable gust/sustained ratio. Ratios above this score 0.
+     */
+    maxGustFactorRatio: number;
+  };
+  /**
+   * Push-notification opt-in settings.
+   */
+  notifications?: {
+    enabled: boolean;
+    /**
+     * Minutes before recommended window opens to send an alert.
+     */
+    windowOpenAlertMinutesBefore?: number;
+  };
+}
+
+// ─── device-registration.schema.json ───────────────────────────────────────────
+/**
+ * AUTO-GENERATED — do not edit by hand.
+ * Run `npm run generate:types` after schema changes.
+ * Source: tools/generate-types.mjs
+ */
+
+/**
+ * Push notification device registration record stored per user per device.
+ */
+export interface DeviceRegistration {
+  /**
+   * Schema version for forward-compatibility checks.
+   */
+  schemaVersion: 1;
+  /**
+   * Client-generated stable device identifier (e.g. UUID).
+   */
+  deviceId: string;
+  /**
+   * Push platform: apns for iOS/macOS, fcm for Android.
+   */
+  platform: 'apns' | 'fcm';
+  /**
+   * Current APNs device token or FCM registration token.
+   */
+  token: string;
+  /**
+   * Cognito sub (UUID) that owns this device registration.
+   */
+  userId: string;
+  /**
+   * ISO 8601 UTC timestamp when the device was first registered.
+   */
+  registeredAt: string;
+  /**
+   * ISO 8601 UTC timestamp of the most recent token update.
+   */
+  updatedAt: string;
+}

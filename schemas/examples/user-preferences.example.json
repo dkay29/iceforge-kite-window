@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "userId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "updatedAt": "2026-07-17T14:30:00Z",
+  "windSpeed": {
+    "minimumUsableKnots": 12,
+    "preferredMinKnots": 15,
+    "preferredMaxKnots": 25,
+    "absoluteMaxKnots": 30
+  },
+  "windDirection": {
+    "acceptedSectors": ["DIRECT_ONSHORE", "SIDE_ONSHORE"]
+  },
+  "gust": {
+    "maxGustFactorRatio": 1.4
+  },
+  "notifications": {
+    "enabled": true,
+    "windowOpenAlertMinutesBefore": 30
+  }
+}

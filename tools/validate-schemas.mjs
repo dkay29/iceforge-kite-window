@@ -20,6 +20,8 @@ const documentsBySchema = {
   'published-forecast.schema.json': ['schemas/examples/published-forecast.example.json'],
   'ruleset.schema.json': ['schemas/examples/ruleset.example.json'],
   'normalized-timeline.schema.json': ['schemas/examples/normalized-timeline.example.json'],
+  'user-preferences.schema.json': ['schemas/examples/user-preferences.example.json'],
+  'device-registration.schema.json': ['schemas/examples/device-registration.example.json'],
 };
 
 let hasDocumentErrors = false;

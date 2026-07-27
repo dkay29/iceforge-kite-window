@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iceforge.example/schemas/user-preferences.schema.json",
+  "title": "UserPreferences",
+  "description": "Personal safety thresholds and display preferences for one Cognito user.",
+  "type": "object",
+  "required": ["schemaVersion", "userId", "updatedAt", "windSpeed", "windDirection", "gust"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version for forward-compatibility checks."
+    },
+    "userId": {
+      "type": "string",
+      "description": "Cognito sub (UUID) that owns these preferences."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of the last successful PUT."
+    },
+    "windSpeed": {
+      "type": "object",
+      "description": "Personal wind-speed thresholds in knots.",
+      "required": [
+        "minimumUsableKnots",
+        "preferredMinKnots",
+        "preferredMaxKnots",
+        "absoluteMaxKnots"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "minimumUsableKnots": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60,
+          "description": "Below this the user cannot fly (score = 0)."
+        },
+        "preferredMinKnots": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "preferredMaxKnots": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "absoluteMaxKnots": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60,
+          "description": "Above this the user considers it unsafe (score = 0)."
+        }
+      }
+    },
+    "windDirection": {
+      "type": "object",
+      "description": "Personal wind-direction preferences.",
+      "required": ["acceptedSectors"],
+      "additionalProperties": false,
+      "properties": {
+        "acceptedSectors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["DIRECT_ONSHORE", "SIDE_ONSHORE", "CROSS_SHORE", "SIDE_OFFSHORE", "OFFSHORE"]
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Wind-direction sectors the user is willing to fly in."
+        }
+      }
+    },
+    "gust": {
+      "type": "object",
+      "description": "Personal gust-stability preferences.",
+      "required": ["maxGustFactorRatio"],
+      "additionalProperties": false,
+      "properties": {
+        "maxGustFactorRatio": {
+          "type": "number",
+          "minimum": 1.0,
+          "maximum": 2.5,
+          "description": "Maximum acceptable gust/sustained ratio. Ratios above this score 0."
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Push-notification opt-in settings.",
+      "required": ["enabled"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "windowOpenAlertMinutesBefore": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Minutes before recommended window opens to send an alert."
+        }
+      }
+    }
+  }
+}
